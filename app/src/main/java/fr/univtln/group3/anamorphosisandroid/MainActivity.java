@@ -7,12 +7,18 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @BindView(R.id.btnLoadGallery) Button btnLoadGallery;
+    @BindView(R.id.scrollView) HorizontalScrollView scrollView;
+    @BindView(R.id.linearlayoutFrames) LinearLayout linearlayoutFrames;
 
     List<Bitmap> listFrames;
 
@@ -92,7 +100,12 @@ public class MainActivity extends AppCompatActivity {
                 for(int i=0; i< timeInMicroSeconds; i+=1000000){
                     System.out.println(i);
                     Bitmap frame = mediaMetadataRetriever.getFrameAtTime(i, FFmpegMediaMetadataRetriever.OPTION_CLOSEST); // frame at 1 seconds
-                    listFrames.add(frame);
+                    //listFrames.add(frame);
+
+                    ImageView iv = new ImageView(getApplicationContext());
+                    iv.setImageBitmap(frame);
+                    linearlayoutFrames.addView(iv);
+
                 }
                 System.out.println("nb list: "+listFrames.size());
                 mediaMetadataRetriever.release();
