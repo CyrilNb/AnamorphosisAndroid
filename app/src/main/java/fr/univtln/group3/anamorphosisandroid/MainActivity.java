@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -11,9 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.VideoView;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import wseemann.media.FFmpegMediaMetadataRetriever;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    @BindView(R.id.btnLoadGallery) Button btnLoadGallery;
 
-    Button btnLoadGallery;
-    VideoView videoView;
+    List<Bitmap> listFrames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +40,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        videoView = (VideoView) findViewById(R.id.videoView);
-        btnLoadGallery = (Button) findViewById(R.id.btnLoadGallery);
-        btnLoadGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onLoadFromGalleryButtonClicked(view);
-            }
-        });
-
-
+        ButterKnife.bind(this);
+        listFrames = new ArrayList<>();
 
     }
 
@@ -77,68 +74,65 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Uri selectedVideoUri = data.getData();
-            System.out.println(selectedVideoUri);
+            String selectedVideoPath = Utils.getPath(this,selectedVideoUri);
+            if (selectedVideoPath != null) {
+                FFmpegMediaMetadataRetriever mediaMetadataRetriever = new FFmpegMediaMetadataRetriever();
+                mediaMetadataRetriever.setDataSource(selectedVideoPath);
 
-            videoView.setVideoURI(selectedVideoUri);
-            videoView.start();
+                //GET VIDEO DURATION IN SEVERAL UNITE
+                String mVideoDuration =  mediaMetadataRetriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
+                long timeInMilliSeconds = Long.parseLong(mVideoDuration);
+                long timeInMicroSeconds = timeInMilliSeconds * 1000;
+                long duration = timeInMilliSeconds / 1000;
+                long hours = duration / 3600;
+                long minutes = (duration - hours * 3600) / 60;
+                long seconds = duration - (hours * 3600 + minutes * 60);
 
-            /*String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                System.out.println("duration: "+seconds+" seconds");
+                for(int i=0; i< timeInMicroSeconds; i+=1000000){
+                    System.out.println(i);
+                    Bitmap frame = mediaMetadataRetriever.getFrameAtTime(i, FFmpegMediaMetadataRetriever.OPTION_CLOSEST); // frame at 1 seconds
+                    listFrames.add(frame);
+                }
+                System.out.println("nb list: "+listFrames.size());
+                mediaMetadataRetriever.release();
+            }
 
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();*/
+        }
+    }
 
-
-
-            /*Bitmap loadedBitmap = BitmapFactory.decodeFile(picturePath);
-            mainImageView.setImageBitmap(loadedBitmap);
-            mainImageView.setAdjustViewBounds(true);
-            */
+        /**
+         * Runs when the gallery button is clicked from the bottom menu
+         * Performs the load of an image from the gallery
+         */
+        @OnClick(R.id.btnLoadGallery) public void onLoadFromGalleryButtonClicked (){
+            verifyStoragePermissions(MainActivity.this);
+            Intent galleryIntent = new Intent();
+            galleryIntent.setType("video/*");
+            galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(galleryIntent, LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE);
 
         }
 
+        /**
+         * If APK >= 23, we need to check at runtime for user permissions
+         * Checks if the app has permission to write to device storage
+         * If the app does not has permissions required then the user will be prompted to grant permissions
+         *
+         * @param activity which performs the operation where permissions are requested
+         */
+        public static void verifyStoragePermissions (Activity activity){
+            // Check if the application has write permission
+            int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-    }
-
-    /**
-     * Runs when the gallery button is clicked from the bottom menu
-     * Performs the load of an image from the gallery
-     */
-    public void onLoadFromGalleryButtonClicked(View view) {
-        verifyStoragePermissions(MainActivity.this);
-        Intent galleryIntent = new Intent();
-        galleryIntent.setType("video/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        /*
-        Intent galleryIntent = new Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);*/
-
-        startActivityForResult(galleryIntent, LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE);
-
-    }
-
-    /**
-     * If APK >= 23, we need to check at runtime for user permissions
-     * Checks if the app has permission to write to device storage
-     * If the app does not has permissions required then the user will be prompted to grant permissions
-     *
-     * @param activity which performs the operation where permissions are requested
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if the application has write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // If not, prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // If not, prompt the user
+                ActivityCompat.requestPermissions(
+                        activity,
+                        PERMISSIONS_STORAGE,
+                        REQUEST_EXTERNAL_STORAGE
+                );
+            }
         }
-    }
 
 }
