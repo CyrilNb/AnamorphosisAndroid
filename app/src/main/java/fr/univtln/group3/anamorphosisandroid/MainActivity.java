@@ -5,8 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
+import android.media.MediaMetadata;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.scrollView) HorizontalScrollView scrollView;
     @BindView(R.id.linearlayoutFrames) LinearLayout linearlayoutFrames;
 
-    List<Bitmap> listFrames;
+    static List<Bitmap> listFrames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,29 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -83,31 +65,42 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Uri selectedVideoUri = data.getData();
             String selectedVideoPath = Utils.getPath(this,selectedVideoUri);
+            System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
-                FFmpegMediaMetadataRetriever mediaMetadataRetriever = new FFmpegMediaMetadataRetriever();
+                final FFmpegMediaMetadataRetriever mediaMetadataRetriever = new FFmpegMediaMetadataRetriever();
                 mediaMetadataRetriever.setDataSource(selectedVideoPath);
 
-                //GET VIDEO DURATION IN SEVERAL UNITE
                 String mVideoDuration =  mediaMetadataRetriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
-                long timeInMilliSeconds = Long.parseLong(mVideoDuration);
-                long timeInMicroSeconds = timeInMilliSeconds * 1000;
-                long duration = timeInMilliSeconds / 1000;
-                long hours = duration / 3600;
-                long minutes = (duration - hours * 3600) / 60;
-                long seconds = duration - (hours * 3600 + minutes * 60);
 
-                System.out.println("duration: "+seconds+" seconds");
-                for(int i=0; i< timeInMicroSeconds; i+=1000000){
-                    System.out.println(i);
-                    Bitmap frame = mediaMetadataRetriever.getFrameAtTime(i, FFmpegMediaMetadataRetriever.OPTION_CLOSEST); // frame at 1 seconds
-                    //listFrames.add(frame);
+                int framerate = (int) Double.parseDouble(mediaMetadataRetriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE));
 
-                    ImageView iv = new ImageView(getApplicationContext());
-                    iv.setImageBitmap(frame);
-                    linearlayoutFrames.addView(iv);
+                int intervalRefresh = (1000000/framerate)*2;
 
+                int currentTime = 0;
+
+                int timeInMilliSeconds = Integer.parseInt(mVideoDuration);
+                int timeInMicroSeconds = timeInMilliSeconds * 1000;
+
+                while(currentTime < timeInMicroSeconds){
+                    final int time = currentTime;
+                    Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            System.out.println("time: "+time);
+                            Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime(time);
+                            addBitmapToList(bitmap);
+                        }
+                    };
+                    thread.start();
+                    currentTime+=intervalRefresh;
                 }
-                System.out.println("nb list: "+listFrames.size());
+
+                try {
+                    Thread.sleep(46000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("nb frames: "+listFrames.size());
                 mediaMetadataRetriever.release();
             }
 
@@ -146,6 +139,10 @@ public class MainActivity extends AppCompatActivity {
                         REQUEST_EXTERNAL_STORAGE
                 );
             }
+        }
+
+        public static synchronized void addBitmapToList(Bitmap frame){
+            listFrames.add(frame);
         }
 
 }
