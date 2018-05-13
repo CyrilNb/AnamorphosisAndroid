@@ -86,10 +86,11 @@ Ce brainstorming a résulté sur un diagramme de cas utilisateur (Annexe 1), un 
 Dans un deuxième temps nous avons réfléchis à l’algorithme comme expliqué dans la section précédente.
 Dans le même temps, une autre partie de l’équipe s’est attelé à la tâche consistant à récupérer toutes les frames d’une vidéo de façon la plus optimisée possible sur un smartphone android.
 Après une recherche, plusieurs librairies comme OpenCV ou FFmepg  (https://github.com/wseemann/FFmpegMediaMetadataRetriever) nous fournissent les outils pour extraire des frames.
-Cependant lors d’un premier test sur une vidéo de 6 secondes à 30fps cela prenait X secondes pour extraires 90 frames.
+Cependant lors d’un premier test sur une vidéo de 6 secondes à 30fps cela prenait 56 secondes en moyenne pour extraires 90 frames.
 Il paraissait donc évident qu’avec la capacité de nos téléphones actuelles, même avec plusieurs coeurs, cela prenait un temps considérable.
 Il faudra ajouter à cela le traitement d’image a posteriori.
-\\Après avoir threadé ce processus afin de le rendre plus rapide et moins bloquant (en terme d’interface utilisateur) le résultat fut le suivant: X secondes pour extraire les 90 frames de la même vidéo.
+\\Après avoir threadé ce processus afin de le rendre plus rapide et moins bloquant (en terme d’interface utilisateur) le résultat fut le suivant: 50 secondes en moyenne pour extraire les 90 frames de la même vidéo.  Le constat n’est donc pas très concluant, en threadant le processus il n’y a pas un énorme gain et donc on peut prédire un problème de performances par la suite.
+
 \newpage
 La deuxième solution présentée dans la partie précédente a été testé avec la librairie Bitmap (en travaillant directement sur la hauteur et la largeur des images et non par rapport à leur matrice) fournie par Android,
 le test a été fait assez rapidement, on a donc utilisé des fonctionnalités et des fonctions qui facilitent le test.
