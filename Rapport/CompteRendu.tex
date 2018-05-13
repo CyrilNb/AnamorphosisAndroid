@@ -37,7 +37,7 @@ Chaque partie de l'image est une droite de pixel qui sera définie plus bas.\big
 \noindent Voici 4 idées de parcours de vidéo en fonction de l’action de l’utilisateur sur l’écran:\par\bigskip
 
 1/Quatre parcours prédéfinis, les deux premiers en prenant des lignes verticales de pixels allant de droite à gauche ou de gauche à droite.
-Les deux autres prenant des lignes horizontales de pixels allant de haut en bas ou de bas en haut.
+Les deux autres prenant des lignes horizontales de pixels allant de haut en bas ou de bas en haut (Annexe 4).
 \begin{center}
  \includegraphics[scale=0.2]{./obturateur1.png}
 \end{center}\newpage
@@ -61,8 +61,8 @@ Les déplacements pourront ainsi être faits selon ces différentes façon:
  \includegraphics[scale=0.2]{./obturateur3.png}
 \end{center}
 On utilisera le critère suivant pour faire le remplissage entre 2 perpendiculaires :
-\\\indent (1) On remplit tout ce qui est en dessous de la perpendiculaire courante et au dessus de toutes les précédentes perpendiculaires. 
-\\\indent (2)Ou alors beaucoup plus simple et économe. On remplit tout ce qui est en dessous de la perpendiculaire courante et qui n’as pas déjà été rempli.
+\\\indent (1) On remplit tout ce qui est au dessus de toutes les précédentes perpendiculaires.
+\\\indent (2) et out ce qui est en dessous de la perpendiculaire courante.
 \begin{center}
  \includegraphics[scale=0.2]{./obturateur3exp.png}
 \end{center}\par\bigskip
@@ -115,6 +115,116 @@ les spécifications d’android (avec la classe Bitmap pour créer une image à 
 \begin{center}
  \includegraphics[scale=0.7]{./Sequence.png}
 \end{center}
+\newpage
+\section{Algorithme avec déplacement simple de l'obturateur}
+\begin{verbatim}
+liste_img : liste des images (on suppose qu’une image est un tableau à 
+	    2 dimensions, chaque élément est un pixel)
+N : nombre d’images dans la liste des images
+l : longueur des images
+h : hauteur des images
+img : image finale
+s1 : systeme 1
+s2 : systeme 2
+s3 : systeme 3
+\end{verbatim}
+
+\noindent\textbf{Retourne:} img \bigskip
+
+\noindent\textbf{\underline{Explications:}}
+\begin{verbatim}
+A chaque tour de boucle, on saute (s1) lignes.
+Tous les (s3) tours de boucle, on saute une ligne
+
+    Ex: Pour un algo de sens vertical, soit N = 10 et h = 4
+        On calcul alors s1 = 2, s3 = 2
+        A chaque tour de boucle, on saute (2) lignes.
+Tous les (2) tours de boucle, on saute une ligne.
+En suivant ce schéma, on arrive a utiliser les images de la vidéo de manière.
+à ce qu’elles soient équitablement prises dans la liste,
+ie : les saut sont répartis un peu partout dans la liste.
+
+
+On écrit 4 algos pour être le plus performant.
+\end{verbatim}
+\bigskip
+\noindent\textbf{haut vers bas et bas vers haut (partie commune):}
+\begin{verbatim}
+s1 = N/h
+s2 = N%h
+if s2 !=0
+s3 = h/s2
+else
+    s3 = h+1 // pour ne jamais remplir la condition du if
+
+\end{verbatim}
+\bigskip
+\noindent\textbf{haut vers bas:}
+\begin{verbatim}
+saut = s3
+cpt = 0
+for i in (0, h):  // pour chaque ligne de l’image finale
+    if i > saut:
+        cpt ++
+        saut += s3
+    for j in (0, l): // pour chaque element dans la ligne
+        img[i][j] = liste_img[cpt][i][j]
+    cpt += s1
+
+\end{verbatim}
+\bigskip
+\noindent\textbf{bas vers haut:}
+\begin{verbatim}
+saut = s3
+cpt = 0
+for i in (0, h):  // pour chaque ligne de l’image finale
+    if i > saut:
+        cpt ++
+        saut += s3
+    for j in (0, l): // pour chaque element dans la ligne
+        img[i][ j] = liste_img[cpt][h-1-i][j]
+    cpt += s1
+
+\end{verbatim}
+\bigskip
+\noindent\textbf{gauche vers droite et droite vers gauche (partie commune):}
+\begin{verbatim}
+s1 = N/l   
+s2 = N%l
+if s2 !=0
+s3 = l/s2
+else
+    s3 = l+1 // pour ne jamais remplir la condition du if
+
+\end{verbatim}
+\newpage
+\noindent\textbf{gauche vers droite:}
+\begin{verbatim}
+saut = s3
+cpt = 0
+for j in (0, l):  // pour chaque colonne de l’image finale
+    if j > saut:
+        cpt ++
+        saut += s3
+    for i in (0, h): // pour chaque element dans la colonne
+        img[j][i] = liste_img[cpt][j][i]
+    cpt += s1
+
+\end{verbatim}
+\bigskip
+\noindent\textbf{droite vers gauche:}
+\begin{verbatim}
+saut = s3
+cpt = 0
+for j in (0, l):  // pour chaque ligne de l’image finale
+    if j > saut:
+        cpt ++
+        saut += s3
+    for i in (0, h): // pour chaque element dans la ligne
+        img[i][j] = liste_img[cpt][i][l-1-j]
+    cpt += s1
+\end{verbatim}
+
 
 
 \end{document}

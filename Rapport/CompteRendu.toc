@@ -7,3 +7,4 @@
 \contentsline {section}{\numberline {5.1}UseCase}{9}
 \contentsline {section}{\numberline {5.2}Activity}{10}
 \contentsline {section}{\numberline {5.3}Sequence}{11}
+\contentsline {section}{\numberline {5.4}Algorithme avec d\IeC {\'e}placement simple de l'obturateur}{12}
