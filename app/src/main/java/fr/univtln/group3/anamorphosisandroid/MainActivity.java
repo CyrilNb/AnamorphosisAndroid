@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 System.out.println("nb frames: "+listFrames.size());
                 mediaMetadataRetriever.release();
+
             }
 
         }
