@@ -13,8 +13,8 @@
 \tableofcontents
 \setcounter{tocdepth}{5}
 
-\chapter{Pésentation du sujet}
-Ce projet à pour but de simuler une anamorphose photographique à partir d’une séquences d’images tirée d’une vidéo.
+\chapter{Présentation du sujet}
+Ce projet a pour but de simuler une anamorphose photographique à partir d’une séquences d’images tirée d’une vidéo.
 Afin de bien comprendre le sujet, il nous a été présenté le fonctionnement d’un appareil photographique avec obturateur à rideaux puisque c’est avec ce mécanisme qu’en résulte une image anamorphosée.
 Ce traitement d’images sera sous la forme d’une application Android codée en Java et donc exécuté avec les capacités d’un smartphone.\par\bigskip
 
@@ -123,7 +123,7 @@ liste_img : liste des images (on suppose qu’une image est un tableau à
 N : nombre d’images dans la liste des images
 l : longueur des images
 h : hauteur des images
-img : image finale
+img : image finale anamorphosée
 s1 : systeme 1
 s2 : systeme 2
 s3 : systeme 3
@@ -147,7 +147,7 @@ ie : les saut sont répartis un peu partout dans la liste.
 
 On écrit 4 algos pour être le plus performant.
 \end{verbatim}
-\bigskip
+\newpage
 \noindent\textbf{haut vers bas et bas vers haut (partie commune):}
 \begin{verbatim}
 s1 = N/h
@@ -186,7 +186,7 @@ for i in (0, h):  // pour chaque ligne de l’image finale
     cpt += s1
 
 \end{verbatim}
-\bigskip
+\newpage
 \noindent\textbf{gauche vers droite et droite vers gauche (partie commune):}
 \begin{verbatim}
 s1 = N/l   
@@ -197,7 +197,7 @@ else
     s3 = l+1 // pour ne jamais remplir la condition du if
 
 \end{verbatim}
-\newpage
+\bigskip
 \noindent\textbf{gauche vers droite:}
 \begin{verbatim}
 saut = s3
