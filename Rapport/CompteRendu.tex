@@ -59,7 +59,7 @@ Les déplacements pourront ainsi être faits selon ces différentes façon:
 \\\indent -vers le bas et vers la gauche
 \begin{center}
  \includegraphics[scale=0.2]{./obturateur3.png}
-\end{center}
+\end{center}\newpage
 On utilisera le critère suivant pour faire le remplissage entre 2 perpendiculaires :
 \\\indent (1) On remplit tout ce qui est au dessus de toutes les précédentes perpendiculaires.
 \\\indent (2) et out ce qui est en dessous de la perpendiculaire courante.
@@ -76,6 +76,10 @@ il y aura des effets non voulus : remplacement de pixels en trop grande quantit�
 \begin{center}
  \includegraphics[scale=0.2]{./obturateur4exp.png}
 \end{center}
+Si on ne limite pas les modifications de l'image il y a alors deux solutions:
+\\\indent -Empêcher la modification multiple de chaque pixel, mais cela pose un problème pour une courbe comme celle au-dessus.
+En effet pour une courbe de cette catégorie la plupart des pixels seront déjà modifiés dès le début.
+\\\indent -Cumuler les modifications des pixels. Cette option est à tester lorsque l'algorithme sera en place car le rendu final peut être très étrange.
 
 \chapter{Travail réalisé}
 En premier lieu, durant les deux premiers jours nous avons pris le temps de bien analyser et comprendre les subtilités du sujet. 
