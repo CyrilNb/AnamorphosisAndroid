@@ -5,32 +5,29 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.MediaExtractor;
-import android.media.MediaFormat;
-import android.media.MediaMetadata;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
-import java.io.IOException;
+import org.bytedeco.javacv.AndroidFrameConverter;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.OpenCVFrameGrabber;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import wseemann.media.FFmpegMediaMetadataRetriever;
+
+import static junit.framework.Assert.assertEquals;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.linearlayoutFrames) LinearLayout linearlayoutFrames;
 
     static List<Bitmap> listFrames;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,41 +65,45 @@ public class MainActivity extends AppCompatActivity {
             String selectedVideoPath = Utils.getPath(this,selectedVideoUri);
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
-                final FFmpegMediaMetadataRetriever mediaMetadataRetriever = new FFmpegMediaMetadataRetriever();
-                mediaMetadataRetriever.setDataSource(selectedVideoPath);
-
-                String mVideoDuration =  mediaMetadataRetriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
-
-                int framerate = (int) Double.parseDouble(mediaMetadataRetriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE));
-
-                int intervalRefresh = (1000000/framerate)*2;
-
-                int currentTime = 0;
-
-                int timeInMilliSeconds = Integer.parseInt(mVideoDuration);
-                int timeInMicroSeconds = timeInMilliSeconds * 1000;
-
-                while(currentTime < timeInMicroSeconds){
-                    final int time = currentTime;
-                    Thread thread = new Thread() {
-                        @Override
-                        public void run() {
-                            System.out.println("time: "+time);
-                            Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime(time);
-                            addBitmapToList(bitmap);
-                        }
-                    };
-                    thread.start();
-                    currentTime+=intervalRefresh;
-                }
+                FrameGrabber frameGrabber = new FFmpegFrameGrabber(selectedVideoPath);
 
                 try {
-                    Thread.sleep(46000);
-                } catch (InterruptedException e) {
+                    frameGrabber.start();
+                } catch (FrameGrabber.Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println("nb frames: "+listFrames.size());
-                mediaMetadataRetriever.release();
+
+                frameGrabber.setFormat("mp4");
+
+                Frame frame = null;
+                AndroidFrameConverter androidFrameConverter = new AndroidFrameConverter();
+                int countFramesRetrieved = 0;
+                System.out.println("getLengthInFrame: "+ frameGrabber.getLengthInFrames());
+                while(countFramesRetrieved < 500){
+                    try {
+                        frame = frameGrabber.grabFrame();
+
+                        if (frame != null){
+                            if(frame.image != null){
+                                System.out.println("getFrameNumber: "+frameGrabber.getFrameNumber());
+                                countFramesRetrieved++;
+                                System.out.println(countFramesRetrieved);
+                                Bitmap bitmap = androidFrameConverter.convert(frame);
+                            }
+
+                        }
+                        else {
+                            System.out.println(" CEST NUL");
+                            System.out.println(countFramesRetrieved);
+                            return;
+                        }
+                    } catch (FrameGrabber.Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                System.out.println("framerate: "+frameGrabber.getFrameRate());
+                System.out.println("countFramesRetrieved: "+countFramesRetrieved);
 
             }
 
