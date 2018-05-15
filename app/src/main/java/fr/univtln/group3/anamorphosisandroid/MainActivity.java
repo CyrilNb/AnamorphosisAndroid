@@ -26,6 +26,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static junit.framework.Assert.assertEquals;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
                 } catch (FrameGrabber.Exception e) {
                     e.printStackTrace();
                 }
+
                 frameGrabber.setFormat("mp4");
+
                 Frame frame = null;
                 AndroidFrameConverter androidFrameConverter = new AndroidFrameConverter();
                 int countFramesRetrieved = 0;
@@ -100,30 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
                 System.out.println("framerate: "+frameGrabber.getFrameRate());
                 System.out.println("countFramesRetrieved: "+countFramesRetrieved);
-                /*FFmpegFrameGrabber videoGrabber = new FFmpegFrameGrabber(selectedVideoPath);
-                Frame frame = null;
-                int count = 0;
-                try {
-                    videoGrabber.start();
-                } catch (FrameGrabber.Exception e) {
-                    e.printStackTrace();
-                }
-                AndroidFrameConverter bitmapConverter = new AndroidFrameConverter();
-                try {
-                    frame = videoGrabber.grabFrame();
-                } catch (FrameGrabber.Exception e) {
-                    e.printStackTrace();
-                }
-                if (frame == null) {
-                    System.out.println("null frame");
-                }
-                if (frame.image == null) {
-                    System.out.println("null frame.image");
-                }
-                count++;
-                final Bitmap currentImage = bitmapConverter.convert(frame);
-                System.out.println(count);
-                System.out.println(currentImage);*/
+
             }
 
         }
