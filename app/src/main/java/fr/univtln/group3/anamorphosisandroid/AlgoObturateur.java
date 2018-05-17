@@ -1,5 +1,6 @@
 package fr.univtln.group3.anamorphosisandroid;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 public class AlgoObturateur {
@@ -105,7 +106,7 @@ public class AlgoObturateur {
     }
 
 
-    public static void gaucheVersDroite() {
+    public static void gaucheVersDroite(Bitmap source) {
         int N = 3;
         int h = 3;
         int l = 3;
@@ -121,6 +122,11 @@ public class AlgoObturateur {
 
         int[][] img = new int[h][l];
 
+        if(N < l)// si le nombre d'images et inferieur à la largeur
+        {
+            int s1 = l / N;
+            int s2 = l % N; //le reste
+        }
 
         int s1 = N / l;    // combien y a trop ou pas assez d’images par rapport a la hauteur de l’image finale
         int s2 = N % l; // le reste
