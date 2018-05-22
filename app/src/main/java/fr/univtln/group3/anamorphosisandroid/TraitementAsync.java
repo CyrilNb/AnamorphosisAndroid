@@ -19,7 +19,7 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
     int recup1, recup2;
     int c;
 
-    public TraitementAsync(ImageView imageView){
+    public TraitementAsync(ImageView imageView) {
         imageViewResult = imageView;
     }
 
@@ -63,11 +63,11 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
         System.out.println("nbFrames: " + nbFrames);
 
         int facteurLargeurEtNbFrames = largeur / nbFrames; //s1
-//        float reste = (float) nbFrames / ((float) nbFrames - ((float) largeur % (float) nbFrames));
+        float reste = (float) nbFrames / ((float) nbFrames - ((float) largeur % (float) nbFrames));
 
         int facteurHauteurEtNbFrames = hauteur / nbFrames; //s1
 //        float reste = (float) nbFrames / ((float) nbFrames - ((float) hauteur % (float) nbFrames));
-        float reste = (float) nbFrames / ((float) hauteur % (float) nbFrames);
+ //       float reste = (float) nbFrames / ((float) hauteur % (float) nbFrames);
 
         System.out.println("facteurLargeurEtNbFrames: " + facteurLargeurEtNbFrames);
         System.out.println("facteurHauteurEtNbFrames: " + facteurHauteurEtNbFrames);
@@ -83,28 +83,28 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
             frame = getFrame(frameGrabber);
             System.out.println("fin grab");
             if (frame != null) {
-//                System.out.println("frame image not null");
-////                convertAndExecLargeur(frame, facteurLargeurEtNbFrames, hauteur, largeur);
-//                convertAndExecHauteur(frame, facteurHauteurEtNbFrames, hauteur, largeur);
-//
-//                if (compteurNombreDeFrames < compteurDuReste) {
-//                    countImagesRecupereGraceAuReste++;
-////                    convertAndExecLargeur(frame, 1, hauteur, largeur);
-//                      convertAndExecHauteur(frame, 1, hauteur, largeur);
-//                } else {
-//                    compteurDuReste += reste;
-//                }
+                System.out.println("frame image not null");
+                convertAndExecLargeur(frame, facteurLargeurEtNbFrames, hauteur, largeur);
+                //convertAndExecHauteur(frame, facteurHauteurEtNbFrames, hauteur, largeur);
+
+                if (compteurNombreDeFrames < compteurDuReste) {
+                    countImagesRecupereGraceAuReste++;
+                    convertAndExecLargeur(frame, 1, hauteur, largeur);
+                    // convertAndExecHauteur(frame, 1, hauteur, largeur);
+                } else {
+                    compteurDuReste += reste;
+                }
                 compteurNombreDeFrames++;
                 System.out.println("c: " + c);
-//                publishProgress(result);
-//                System.out.println("frame not null fin");
+                publishProgress(result);
+                System.out.println("frame not null fin");
             }
         }
 
         publishProgress(result);
         System.out.println("countImagesRecupereGraceAuReste: " + countImagesRecupereGraceAuReste);
         System.out.println("CEST FINIIIIIIIIIIII");
-     return result;
+        return result;
     }
 
 
@@ -148,15 +148,15 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
 
 
         int[] pixelsResult = new int[largeur * hauteur];
-        result.getPixels(pixelsResult,0,largeur,0,0,largeur,hauteur);
+        result.getPixels(pixelsResult, 0, largeur, 0, 0, largeur, hauteur);
 
         for (int j = numColonneStart; j < nombreDeColonnesAPRENDRE + numColonneStart; j++) {
             for (int i = 0; i < hauteur; i++) { // pour chaque element dans la ligne
-                if(i ==0 ){
+                if (i == 0) {
                     int index = (i * largeur) + j;
-                    System.out.println("index: "+ index);
+                    System.out.println("index: " + index);
                 }
-                pixelsResult[(i * largeur) + j] = pixelsSourceFrame[(i * largeur)  + j];
+                pixelsResult[(i * largeur) + j] = pixelsSourceFrame[(i * largeur) + j];
             }
         }
         System.out.println("je change les pixels");
@@ -172,15 +172,15 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
 
 
         int[] pixelsResult = new int[largeur * hauteur];
-        result.getPixels(pixelsResult,0,largeur,0,0,largeur,hauteur);
+        result.getPixels(pixelsResult, 0, largeur, 0, 0, largeur, hauteur);
 
         for (int i = numLigneStart; i < nombreDeLigneAPRENDRE + numLigneStart; i++) {
             for (int j = 0; j < largeur; j++) { // pour chaque element dans la ligne
-                if(j ==0 ){
+                if (j == 0) {
                     int index = (i * largeur) + j;
-                    System.out.println("index: "+ index);
+                    System.out.println("index: " + index);
                 }
-                pixelsResult[(i * largeur) + j] = pixelsSourceFrame[(i * largeur)  + j];
+                pixelsResult[(i * largeur) + j] = pixelsSourceFrame[(i * largeur) + j];
             }
         }
         System.out.println("je change les pixels");
