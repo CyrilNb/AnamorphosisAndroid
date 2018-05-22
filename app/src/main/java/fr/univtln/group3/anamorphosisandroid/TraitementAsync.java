@@ -17,6 +17,7 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
     int compteur_numLigneStart;
     ImageView imageViewResult;
     int recup1, recup2;
+    int c;
 
     public TraitementAsync(ImageView imageView){
         imageViewResult = imageView;
@@ -65,7 +66,8 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
 //        float reste = (float) nbFrames / ((float) nbFrames - ((float) largeur % (float) nbFrames));
 
         int facteurHauteurEtNbFrames = hauteur / nbFrames; //s1
-        float reste = (float) nbFrames / ((float) nbFrames - ((float) hauteur % (float) nbFrames));
+//        float reste = (float) nbFrames / ((float) nbFrames - ((float) hauteur % (float) nbFrames));
+        float reste = (float) nbFrames / ((float) hauteur % (float) nbFrames);
 
         System.out.println("facteurLargeurEtNbFrames: " + facteurLargeurEtNbFrames);
         System.out.println("facteurHauteurEtNbFrames: " + facteurHauteurEtNbFrames);
@@ -75,25 +77,27 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
         int compteurNombreDeFrames = 0; //cpt
         int countImagesRecupereGraceAuReste = 0; //cpt_img
 
+        c = 0;
         while (compteurNombreDeFrames < nbFrames) {
             System.out.println("debut grab");
             frame = getFrame(frameGrabber);
             System.out.println("fin grab");
             if (frame != null) {
-                System.out.println("frame image not null");
-//                convertAndExecLargeur(frame, facteurLargeurEtNbFrames, hauteur, largeur);
-                convertAndExecHauteur(frame, facteurHauteurEtNbFrames, hauteur, largeur);
-
-                if (compteurNombreDeFrames < compteurDuReste) {
-                    countImagesRecupereGraceAuReste++;
-//                    convertAndExecLargeur(frame, 1, hauteur, largeur);
-                      convertAndExecHauteur(frame, 1, hauteur, largeur);
-                } else {
-                    compteurDuReste += reste;
-                }
+//                System.out.println("frame image not null");
+////                convertAndExecLargeur(frame, facteurLargeurEtNbFrames, hauteur, largeur);
+//                convertAndExecHauteur(frame, facteurHauteurEtNbFrames, hauteur, largeur);
+//
+//                if (compteurNombreDeFrames < compteurDuReste) {
+//                    countImagesRecupereGraceAuReste++;
+////                    convertAndExecLargeur(frame, 1, hauteur, largeur);
+//                      convertAndExecHauteur(frame, 1, hauteur, largeur);
+//                } else {
+//                    compteurDuReste += reste;
+//                }
                 compteurNombreDeFrames++;
-                publishProgress(result);
-                System.out.println("frame not null fin");
+                System.out.println("c: " + c);
+//                publishProgress(result);
+//                System.out.println("frame not null fin");
             }
         }
 
@@ -112,6 +116,7 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
             System.out.println(frameGrabber.getLengthInFrames());
             if (frame != null) {
                 if (frame.image != null) {
+                    c++;
                     return frame;
                 }
             }
