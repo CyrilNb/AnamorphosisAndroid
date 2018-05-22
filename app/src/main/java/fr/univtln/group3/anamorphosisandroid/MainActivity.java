@@ -45,10 +45,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageViewResult;
 
     List<Bitmap> listFrames;
-    Bitmap result;
 
 
-    int compteur_numColonneStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,70 +64,14 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            compteur_numColonneStart = 0; //cpt_h
             Uri selectedVideoUri = data.getData();
             String selectedVideoPath = Utils.getPath(this, selectedVideoUri);
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
-                FrameGrabber frameGrabber = new FFmpegFrameGrabber(selectedVideoPath);
-
-                int largeur = 0;
-                int hauteur = 0;
-
-                try {
-                    frameGrabber.start();
-                    largeur = frameGrabber.getImageWidth();
-                    hauteur = frameGrabber.getImageHeight();
-
-                    if (largeur != 0 | hauteur != 0) {
-                        System.out.println("largeur: " + largeur);
-                        System.out.println("hauteur: " + hauteur);
-                        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-                        result = Bitmap.createBitmap(largeur, hauteur, conf); // this creates a MUTABLE bitmap
-                    } else {
-                        System.out.println("ERROR: largeur and hauteur = 0 from FrameGrabber");
-                    }
-
-                } catch (FrameGrabber.Exception e) {
-                    e.printStackTrace();
-                }
-
-                frameGrabber.setFormat("mp4");
-
-                Frame frame = null;
-
-                int nbFrames = frameGrabber.getLengthInFrames();
-                System.out.println("nbFrames: " + nbFrames);
-
-                int facteurLargeurEtNbFrames = largeur / nbFrames; //s1
-                float reste = (float) nbFrames / ((float) nbFrames - ((float) largeur % (float) nbFrames));
-
-                System.out.println("facteurLargeurEtNbFrames: " + facteurLargeurEtNbFrames);
-                System.out.println("reste: " + reste);
-
-                float compteurDuReste = 0; //cpt_s2
-                int compteurNombreDeFrames = 0; //cpt
-                int countImagesRecupereGraceAuReste = 0; //cpt_img
-
-                while (compteurNombreDeFrames < nbFrames) {
-                    frame = getFrame(frameGrabber);
-                    if (frame != null) {
-                        convertAndExec(frame, facteurLargeurEtNbFrames, hauteur, largeur);
-
-                        if (compteurNombreDeFrames < compteurDuReste) {
-                            countImagesRecupereGraceAuReste++;
-                            convertAndExec(frame, 1, hauteur, largeur);
-                        } else {
-                            compteurDuReste += reste;
-                        }
-                        compteurNombreDeFrames++;
-                        imageViewResult.setImageBitmap(result);
-                    }
-                }
-
-                System.out.println("countImagesRecupereGraceAuReste: " + countImagesRecupereGraceAuReste);
-                System.out.println("CEST FINIIIIIIIIIIII");
-
+                System.out.println("*-*-*-*-*-DEBUT-*-*-*-*-*");
+                TraitementAsync async = new TraitementAsync(imageViewResult);
+                async.execute(selectedVideoPath);
+                System.out.println("*-*-*-*-*- FIN -*-*-*-*-*");
             } else {
                 System.out.println("video path is null");
             }
@@ -137,31 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    private Frame getFrame(FrameGrabber frameGrabber) {
-        Frame frame = null;
-        try {
-            frame = frameGrabber.grabFrame();
-            if (frame != null) {
-                if (frame.image != null) {
-                    return frame;
-                }
-            } else {
-                return null;
-            }
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    private void convertAndExec(Frame frame, int facteurHauteurEtNbFrames, int hauteur, int largeur) {
-        AndroidFrameConverter androidFrameConverter = new AndroidFrameConverter();
-        Bitmap bitmap = androidFrameConverter.convert(frame);
-        gaucheVersDroite(bitmap, compteur_numColonneStart, facteurHauteurEtNbFrames, hauteur, largeur);
-        compteur_numColonneStart += facteurHauteurEtNbFrames;
-    }
 
 
     /**
@@ -199,26 +116,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void gaucheVersDroite(Bitmap sourceFrame, int numColonneStart, int nombreDeColonnesAPRENDRE, int hauteur, int largeur) {
-
-        int[] pixelsSourceFrame = new int[largeur * hauteur];
-        sourceFrame.getPixels(pixelsSourceFrame, 0, largeur, 0, 0, largeur, hauteur);
-
-
-        int[] pixelsResult = new int[largeur * hauteur];
-        result.getPixels(pixelsResult,0,largeur,0,0,largeur,hauteur);
-
-        for (int j = numColonneStart; j < nombreDeColonnesAPRENDRE + numColonneStart; j++) {
-            for (int i = 0; i < hauteur; i++) { // pour chaque element dans la ligne
-                if(i ==0 ){
-                    int index = (i * largeur) + j;
-                    System.out.println("index: "+ index);
-                }
-                pixelsResult[(i * largeur) + j] = pixelsSourceFrame[(i * largeur)  + j];
-            }
-        }
-        System.out.println("je change les pixels");
-        result.setPixels(pixelsResult, 0, largeur, 0, 0, largeur, hauteur);
-    }
 
 }
