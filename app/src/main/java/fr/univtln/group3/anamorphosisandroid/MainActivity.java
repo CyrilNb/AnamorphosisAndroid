@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
                 System.out.println("*-*-*-*-*-DEBUT-*-*-*-*-*");
-                TraitementAsync async = new TraitementAsync(imageViewResult);
-                async.execute(selectedVideoPath);
+//                new TraitementAsync(imageViewResult).execute(selectedVideoPath);
+                new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
                 System.out.println("*-*-*-*-*- FIN -*-*-*-*-*");
             } else {
                 System.out.println("video path is null");
