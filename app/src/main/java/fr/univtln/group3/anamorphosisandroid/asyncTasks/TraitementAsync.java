@@ -1,4 +1,4 @@
-package fr.univtln.group3.anamorphosisandroid;
+package fr.univtln.group3.anamorphosisandroid.asyncTasks;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -63,11 +63,11 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
         System.out.println("nbFrames: " + nbFrames);
 
         int facteurLargeurEtNbFrames = largeur / nbFrames; //s1
-        float reste = (float) nbFrames / ((float) nbFrames - ((float) largeur % (float) nbFrames));
+    //    float reste = (float) nbFrames / ((float) nbFrames - ((float) largeur % (float) nbFrames));
 
         int facteurHauteurEtNbFrames = hauteur / nbFrames; //s1
 //        float reste = (float) nbFrames / ((float) nbFrames - ((float) hauteur % (float) nbFrames));
- //       float reste = (float) nbFrames / ((float) hauteur % (float) nbFrames);
+        float reste = (float) nbFrames / ((float) hauteur % (float) nbFrames);
 
         System.out.println("facteurLargeurEtNbFrames: " + facteurLargeurEtNbFrames);
         System.out.println("facteurHauteurEtNbFrames: " + facteurHauteurEtNbFrames);
@@ -84,13 +84,13 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
             System.out.println("fin grab");
             if (frame != null) {
                 System.out.println("frame image not null");
-                convertAndExecLargeur(frame, facteurLargeurEtNbFrames, hauteur, largeur);
-                //convertAndExecHauteur(frame, facteurHauteurEtNbFrames, hauteur, largeur);
+                //convertAndExecLargeur(frame, facteurLargeurEtNbFrames, hauteur, largeur);
+                convertAndExecHauteur(frame, facteurHauteurEtNbFrames, hauteur, largeur);
 
                 if (compteurNombreDeFrames < compteurDuReste) {
                     countImagesRecupereGraceAuReste++;
-                    convertAndExecLargeur(frame, 1, hauteur, largeur);
-                    // convertAndExecHauteur(frame, 1, hauteur, largeur);
+                    //convertAndExecLargeur(frame, 1, hauteur, largeur);
+                     convertAndExecHauteur(frame, 1, hauteur, largeur);
                 } else {
                     compteurDuReste += reste;
                 }
