@@ -30,7 +30,7 @@ public class ExtractMpegFrameByOne{
 
     // Log
     private static final String TAG = "ExtractMpegFrames";
-    private static final boolean VERBOSE = true;
+    private static final boolean VERBOSE = false;
 
 
     // Conditions for extract
@@ -54,7 +54,7 @@ public class ExtractMpegFrameByOne{
     }
 
     public int getNbFrames(){
-        return format.getInteger(MediaFormat.KEY_DURATION) * format.getInteger(MediaFormat.KEY_FRAME_RATE);
+        return (int) (format.getLong(MediaFormat.KEY_DURATION) * format.getInteger(MediaFormat.KEY_FRAME_RATE) / 1000000);
     }
 
     protected void configure(String videoPath) {
@@ -199,7 +199,7 @@ public class ExtractMpegFrameByOne{
 //                                String.format("frame-%02d.png", decodeCount));
                     long startWhen = System.nanoTime();
                     bitmap = outputSurface.displayFrame();
-                    Log.d(TAG, "decodeCount: " + decodeCount);
+                    if (VERBOSE) Log.d(TAG, "decodeCount: " + decodeCount);
                     frameSaveTime += System.nanoTime() - startWhen;
                     decodeCount++;
                 }

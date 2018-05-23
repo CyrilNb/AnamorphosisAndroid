@@ -48,7 +48,7 @@ public class CodecOutputSurface implements SurfaceTexture.OnFrameAvailableListen
 
     private ByteBuffer mPixelBuf;                       // used by saveFrame()
 
-    private boolean VERBOSE = true;
+    private boolean VERBOSE = false;
     private static final String TAG = "ExtractMpegFrames";
 
 

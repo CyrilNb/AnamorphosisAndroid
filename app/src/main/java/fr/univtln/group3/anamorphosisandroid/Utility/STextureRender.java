@@ -58,7 +58,7 @@ public class STextureRender {
     private int maPositionHandle;
     private int maTextureHandle;
 
-    private boolean VERBOSE = true;
+    private boolean VERBOSE = false;
     private static final String TAG = "ExtractMpegFrames";
 
     public STextureRender() {

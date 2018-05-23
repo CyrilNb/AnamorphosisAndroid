@@ -1,6 +1,7 @@
 package fr.univtln.group3.anamorphosisandroid;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -26,16 +27,24 @@ public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Bitmap> {
         ExtractMpegFrameByOne extractMpegFrameByOne = new ExtractMpegFrameByOne();
         extractMpegFrameByOne.configure(selectedVideoPath[0]);
 
-        // Apres extract[...].configure(...)
-        PixelsExtractor pixelsExtractor = new PixelsExtractor(extractMpegFrameByOne.getWidth(),
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        Bitmap bitmapResult = Bitmap.createBitmap(extractMpegFrameByOne.getWidth(),
+                extractMpegFrameByOne.getHeight(),
+                conf);
+        bitmapResult.setPixel(1000, 100, Color.argb(255,255,0,0));
+
+        // Apres le configure !!!
+        PixelsExtractor pixelsExtractor = new PixelsExtractor(PixelsExtractor.Direction.HAUT_BAS,
+                extractMpegFrameByOne.getWidth(),
                 extractMpegFrameByOne.getHeight(),
                 extractMpegFrameByOne.getNbFrames());
-        pixelsExtractor.setDirection(PixelsExtractor.Direction.HAUT_BAS);
+
 
         while(!extractMpegFrameByOne.isOutputDone()){
-            Bitmap bitmap = extractMpegFrameByOne.getNextBitmap();
-            if (bitmap!=null){
-                publishProgress(bitmap);
+            Bitmap bitmapCurrent = extractMpegFrameByOne.getNextBitmap();
+            if (bitmapCurrent!=null){
+                pixelsExtractor.extractAndCopy(bitmapResult, bitmapCurrent);
+                publishProgress(bitmapResult);
             }
         }
         return null;

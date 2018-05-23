@@ -1,12 +1,13 @@
 package fr.univtln.group3.anamorphosisandroid;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 public class PixelsExtractor {
     Direction direction;
 
 
-    int rangeesPixelsCopies;
+    int nombreRangeesDePixelsCopiees;
     int largeur;
     int hauteur;
     int nbBitmap;
@@ -16,29 +17,46 @@ public class PixelsExtractor {
     float compteurResteObturateur;
     int bitmapTraitees;
 
+//    Bitmap bitmapResult;
+
+    private static final String TAG = "ExtractMpegFrames";
+    private static final boolean VERBOSE = false;
+
     public PixelsExtractor(Direction direction, int largeur, int hauteur, int nbBitmap){
-        rangeesPixelsCopies = 0;
+        nombreRangeesDePixelsCopiees = 0;
         this.direction = direction;
         this.largeur = largeur;
         this.hauteur = hauteur;
         this.nbBitmap = nbBitmap;
+//        this.bitmapResult = bitmapResult;
+
+        System.out.println("largeur: " + largeur);
+        System.out.println("hauteur: " + hauteur);
+        System.out.println("nbBitmap: "+ nbBitmap);
 
         switch (direction){
             case HAUT_BAS:
                 tailleObturateur = hauteur / nbBitmap;
-                resteObturateur = (float) nbBitmap / ((float) nbBitmap - ((float) hauteur % (float) nbBitmap));
+                resteObturateur = (float) nbBitmap / ((float) hauteur % (float) nbBitmap);
+                break;
             case GAUCHE_DROITE:
                 tailleObturateur = largeur / nbBitmap;
-                resteObturateur = (float) nbBitmap / ((float) nbBitmap - ((float) largeur % (float) nbBitmap));
+                resteObturateur = (float) nbBitmap / ((float) largeur % (float) nbBitmap);
+                break;
             case BAS_HAUT:
                 tailleObturateur = hauteur / nbBitmap;
-                resteObturateur = (float) nbBitmap / ((float) nbBitmap - ((float) hauteur % (float) nbBitmap));
+                resteObturateur = (float) nbBitmap / ((float) hauteur % (float) nbBitmap);
+                break;
             case DROITE_GAUCHE:
                 tailleObturateur = largeur / nbBitmap;
-                resteObturateur = (float) nbBitmap / ((float) nbBitmap - ((float) largeur % (float) nbBitmap));
+                resteObturateur = (float) nbBitmap / ((float) largeur % (float) nbBitmap);
+                break;
         }
         compteurResteObturateur = 0;
         bitmapTraitees = 0;
+
+        System.out.println("taille: " + tailleObturateur);
+        System.out.println("reste: " + resteObturateur);
 
     }
 
@@ -50,39 +68,37 @@ public class PixelsExtractor {
         DROITE_GAUCHE
     }
 
-    public void extractAndCopy(Bitmap bitmap){
+    public void extractAndCopy(Bitmap bitmapResult, Bitmap bitmapCurrent){
+        int oneMore = 0;
+        if (bitmapTraitees > compteurResteObturateur){
+            oneMore = 1;
+            compteurResteObturateur += resteObturateur;
+        }
         switch (direction){
             case HAUT_BAS:
-                hautBas(bitmap);
+                hautBas(bitmapResult, bitmapCurrent, oneMore);
+                break;
         }
+
+        bitmapTraitees ++;
     }
 
-    public void hautBas(Bitmap bitmap){
-        if (bitmapTraitees < nbBitmap){
-            System.out.println("debut haut vers bas");
-            int[] pixelsSourceFrame = new int[largeur * hauteur];
-            bitmap.getPixels(pixelsSourceFrame, 0, largeur, 0, 0, largeur, hauteur);
-
-
-            int[] pixelsResult = new int[largeur * hauteur];
-            result.getPixels(pixelsResult,0,largeur,0,0,largeur,hauteur);
-
-            for (int i = numLigneStart; i < nombreDeLigneAPRENDRE + numLigneStart; i++) {
-                for (int j = 0; j < largeur; j++) { // pour chaque element dans la ligne
-                    if(j ==0 ){
-                        int index = (i * largeur) + j;
-                        System.out.println("index: "+ index);
+    public void hautBas(Bitmap bitmapResult, Bitmap bitmapCurrent, int oneMore) {
+        if (bitmapTraitees < nbBitmap) {
+            if (VERBOSE) Log.d(TAG, "debut haut bas");
+            for (int i = nombreRangeesDePixelsCopiees; i < nombreRangeesDePixelsCopiees + tailleObturateur + oneMore; i++) {
+                if (i<hauteur) {
+                    for (int j = 0; j < largeur; j++) { // pour chaque element dans la ligne
+                        bitmapResult.setPixel(j, i, bitmapCurrent.getPixel(j, i));
                     }
-                    pixelsResult[(i * largeur) + j] = pixelsSourceFrame[(i * largeur)  + j];
                 }
             }
-            System.out.println("je change les pixels");
-            result.setPixels(pixelsResult, 0, largeur, 0, 0, largeur, hauteur);
-            System.out.println("apres changement pixels");
+            nombreRangeesDePixelsCopiees += tailleObturateur + oneMore;
+            System.out.println("nombreRangeesDePixelsCopiees: " + nombreRangeesDePixelsCopiees);
+            if (VERBOSE) Log.d(TAG, "fin haut bas");
+        } else {
+            Log.d(TAG, "Erreur, toutes les Bitmaps on été traitées");
         }
-    }
-    else{
-
     }
 
 }
