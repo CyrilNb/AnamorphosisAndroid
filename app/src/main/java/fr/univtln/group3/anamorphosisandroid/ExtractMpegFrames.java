@@ -16,11 +16,14 @@ package fr.univtln.group3.anamorphosisandroid;
  * limitations under the License.
  */
 
+import android.graphics.Bitmap;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,16 +60,21 @@ import static junit.framework.Assert.fail;
  *
  * The wrapper propagates exceptions thrown by the worker thread back to the caller.
  */
-public class ExtractMpegFrames {
+public class ExtractMpegFrames extends AsyncTask<Void, Bitmap, Void>{
     private String videopath;
-    private int MAX_FRAMES = 10;       // stop extracting after this many
 
     private static final String TAG = "ExtractMpegFrames";
     private static final boolean VERBOSE = true;
 
+    private ImageView imageView;
 
-    public ExtractMpegFrames(String videopath){
+    boolean outputDoneOne = false;
+    boolean inputDoneOne = false;
+
+
+    public ExtractMpegFrames(String videopath, ImageView imageView){
         this.videopath = videopath;
+        this.imageView = imageView;
     }
 
 
@@ -78,8 +86,8 @@ public class ExtractMpegFrames {
      * it by adjusting the GL viewport to get letterboxing or pillarboxing, but generally if
      * you're extracting frames you don't want black bars.
      */
-    public void extractMpegFrames() throws IOException {
-
+    @Override
+    protected Void doInBackground(Void... voids) {
         // CodecOutputSurface
         CodecOutputSurface outputSurface = null;
 
@@ -128,6 +136,10 @@ public class ExtractMpegFrames {
             // Start Extracting
             doExtract(extractor, trackIndex, decoder, outputSurface);
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             // release everything we grabbed
             if (outputSurface != null) {
@@ -144,7 +156,76 @@ public class ExtractMpegFrames {
                 extractor = null;
             }
         }
+        return null;
     }
+
+//    public void extractMpegFrames() throws IOException {
+
+//        // CodecOutputSurface
+//        CodecOutputSurface outputSurface = null;
+//
+//        // MediaExtractor
+//        MediaExtractor extractor = null;
+//
+//        // MediaFormat
+//        MediaFormat format = null;
+//
+//        // MediaCodec
+//        MediaCodec decoder = null;
+//
+//
+//        try {
+//            // Select trackIndex
+//            File inputFile = new File(videopath);
+//            if (!inputFile.canRead()) {
+//                throw new FileNotFoundException("Unable to read " + inputFile);
+//            }
+//            extractor = new MediaExtractor();
+//            extractor.setDataSource(inputFile.toString());
+//            int trackIndex = selectTrack(extractor);
+//            if (trackIndex < 0) {
+//                throw new RuntimeException("No video track found in " + inputFile);
+//            }
+//            extractor.selectTrack(trackIndex);
+//
+//            // Get format of the trackIndex
+//            format = extractor.getTrackFormat(trackIndex);
+//            if (VERBOSE) {
+//                Log.d(TAG, "Video size is " + format.getInteger(MediaFormat.KEY_WIDTH) + "x" +
+//                        format.getInteger(MediaFormat.KEY_HEIGHT));
+//            }
+//
+//            // Create outputSurface
+//            int width = format.getInteger(MediaFormat.KEY_WIDTH);
+//            int height = format.getInteger(MediaFormat.KEY_HEIGHT);
+//            outputSurface = new CodecOutputSurface(width, height);
+//
+//            // Create MediaCodec decoder
+//            String mime = format.getString(MediaFormat.KEY_MIME);
+//            decoder = MediaCodec.createDecoderByType(mime);
+//            decoder.configure(format, outputSurface.getSurface(), null, 0);
+//            decoder.start();
+//
+//            // Start Extracting
+//            doExtract(extractor, trackIndex, decoder, outputSurface);
+//
+//        } finally {
+//            // release everything we grabbed
+//            if (outputSurface != null) {
+//                outputSurface.release();
+//                outputSurface = null;
+//            }
+//            if (decoder != null) {
+//                decoder.stop();
+//                decoder.release();
+//                decoder = null;
+//            }
+//            if (extractor != null) {
+//                extractor.release();
+//                extractor = null;
+//            }
+//        }
+//    }
 
     /**
      * Selects the video track, if any.
@@ -182,7 +263,9 @@ public class ExtractMpegFrames {
 
         boolean outputDone = false;
         boolean inputDone = false;
+        int a = 0;
         while (!outputDone) {
+            System.out.println("loop: " + a++);
             if (VERBOSE) Log.d(TAG, "loop");
 
             // Feed more data to the decoder.
@@ -252,23 +335,30 @@ public class ExtractMpegFrames {
                         outputSurface.awaitNewImage();
                         outputSurface.drawImage(true);
 
-                        if (decodeCount < MAX_FRAMES) {
-//                            File outputFile = new File(FILES_DIR,
-//                                    String.format("frame-%02d.png", decodeCount));
-                            long startWhen = System.nanoTime();
-//                            outputSurface.saveFrame(outputFile.toString());
-                            Log.d(TAG, "decodeCount: " + decodeCount);
-                            frameSaveTime += System.nanoTime() - startWhen;
-                        }
+//                        File outputFile = new File(FILES_DIR,
+//                                String.format("frame-%02d.png", decodeCount));
+                        long startWhen = System.nanoTime();
+                        Bitmap bitmap = outputSurface.displayFrame();
+                        publishProgress(bitmap);
+                        Log.d(TAG, "decodeCount: " + decodeCount);
+                        frameSaveTime += System.nanoTime() - startWhen;
                         decodeCount++;
                     }
                 }
             }
         }
 
-        int numSaved = (MAX_FRAMES < decodeCount) ? MAX_FRAMES : decodeCount;
+        int numSaved = decodeCount;
         Log.d(TAG, "Saving " + numSaved + " frames took " +
                 (frameSaveTime / numSaved / 1000) + " us per frame");
+    }
+
+
+
+
+    @Override
+    protected void onProgressUpdate(Bitmap... bitmap){
+        imageView.setImageBitmap(bitmap[0]);
     }
 
 }

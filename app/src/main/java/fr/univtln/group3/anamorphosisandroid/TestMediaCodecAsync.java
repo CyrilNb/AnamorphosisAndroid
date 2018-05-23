@@ -1,21 +1,11 @@
 package fr.univtln.group3.anamorphosisandroid;
 
 import android.graphics.Bitmap;
-import android.media.MediaCodec;
-import android.media.MediaExtractor;
-import android.media.MediaFormat;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageView;
 
 import org.bytedeco.javacv.AndroidFrameConverter;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameGrabber;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Bitmap> {
 
@@ -32,11 +22,21 @@ public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... selectedVideoPath) {
-        ExtractMpegFrames extractMpegFrames = new ExtractMpegFrames(selectedVideoPath[0]);
-        try {
-            extractMpegFrames.extractMpegFrames();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        ExtractMpegFrameByOne extractMpegFrameByOne = new ExtractMpegFrameByOne();
+        extractMpegFrameByOne.configure(selectedVideoPath[0]);
+
+        // Apres extract[...].configure(...)
+        PixelsExtractor pixelsExtractor = new PixelsExtractor(extractMpegFrameByOne.getWidth(),
+                extractMpegFrameByOne.getHeight(),
+                extractMpegFrameByOne.getNbFrames());
+        pixelsExtractor.setDirection(PixelsExtractor.Direction.HAUT_BAS);
+
+        while(!extractMpegFrameByOne.isOutputDone()){
+            Bitmap bitmap = extractMpegFrameByOne.getNextBitmap();
+            if (bitmap!=null){
+                publishProgress(bitmap);
+            }
         }
         return null;
     }

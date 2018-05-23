@@ -5,6 +5,7 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.util.Log;
 import android.view.Surface;
+import android.widget.ImageView;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -49,6 +50,7 @@ public class CodecOutputSurface implements SurfaceTexture.OnFrameAvailableListen
 
     private boolean VERBOSE = true;
     private static final String TAG = "ExtractMpegFrames";
+
 
     /**
      * Creates a CodecOutputSurface backed by a pbuffer with the specified dimensions.  The
@@ -255,7 +257,7 @@ public class CodecOutputSurface implements SurfaceTexture.OnFrameAvailableListen
     /**
      * Saves the current frame to disk as a PNG image.
      */
-    public void saveFrame(String filename) throws IOException {
+    public Bitmap displayFrame() {
         // glReadPixels gives us a ByteBuffer filled with what is essentially big-endian RGBA
         // data (i.e. a byte of red, followed by a byte of green...).  To use the Bitmap
         // constructor that takes an int[] array with pixel data, we need an int[] filled
@@ -293,19 +295,27 @@ public class CodecOutputSurface implements SurfaceTexture.OnFrameAvailableListen
                 mPixelBuf);
 
         BufferedOutputStream bos = null;
+        Bitmap bitmap;
         try {
-            bos = new BufferedOutputStream(new FileOutputStream(filename));
-            Bitmap bmp = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+//            bos = new BufferedOutputStream(new FileOutputStream(filename));
+            bitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
             mPixelBuf.rewind();
-            bmp.copyPixelsFromBuffer(mPixelBuf);
+            bitmap.copyPixelsFromBuffer(mPixelBuf);
 //                bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
 //                bmp.recycle();
         } finally {
-            if (bos != null) bos.close();
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         if (VERBOSE) {
-            Log.d(TAG, "Saved " + mWidth + "x" + mHeight + " frame as '" + filename + "'");
+            Log.d(TAG, "Displayed " + mWidth + "x" + mHeight + " frame ");
         }
+        return bitmap;
     }
 
     /**

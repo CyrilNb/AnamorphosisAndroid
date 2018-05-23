@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("*-*-*-*-*-DEBUT-*-*-*-*-*");
 //                new TraitementAsync(imageViewResult).execute(selectedVideoPath);
                 new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
+//                new ExtractMpegFrames(selectedVideoPath, imageViewResult).execute();
                 System.out.println("*-*-*-*-*- FIN -*-*-*-*-*");
             } else {
                 System.out.println("video path is null");
