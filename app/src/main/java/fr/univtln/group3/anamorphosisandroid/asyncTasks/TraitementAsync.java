@@ -1,6 +1,8 @@
 package fr.univtln.group3.anamorphosisandroid.asyncTasks;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -18,6 +20,7 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
     ImageView imageViewResult;
     int recup1, recup2;
     int c;
+    Canvas canvas;
 
     public TraitementAsync(ImageView imageView) {
         imageViewResult = imageView;
@@ -47,6 +50,7 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
                 System.out.println("hauteur: " + hauteur);
                 Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
                 result = Bitmap.createBitmap(largeur, hauteur, conf); // this creates a MUTABLE bitmap
+                canvas = new Canvas(result);
             } else {
                 System.out.println("ERROR: largeur and hauteur = 0 from FrameGrabber");
             }
@@ -100,7 +104,9 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
                 System.out.println("frame not null fin");
             }
         }
-
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        canvas.drawBitmap(result,0f,0f,paint);
         publishProgress(result);
         System.out.println("countImagesRecupereGraceAuReste: " + countImagesRecupereGraceAuReste);
         System.out.println("CEST FINIIIIIIIIIIII");
