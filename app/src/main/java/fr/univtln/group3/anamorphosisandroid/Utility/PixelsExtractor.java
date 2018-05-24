@@ -210,7 +210,7 @@ public class PixelsExtractor {
     }
 
     public void comblerBasHaut(Bitmap bitmapCurrent){
-        for (int i = numRangeeDePixels; i >= 0; i++) {
+        for (int i = numRangeeDePixels; i >= 0; i--) {
             for (int j = 0; j < largeur; j++) {
                 bitmapResult.setPixel(j, i, bitmapCurrent.getPixel(j, i));
             }
@@ -218,7 +218,7 @@ public class PixelsExtractor {
     }
 
     public void comblerDroiteGauche(Bitmap bitmapCurrent) {
-        for (int j = numRangeeDePixels; j >= 0; j++) {
+        for (int j = numRangeeDePixels; j >= 0; j--) {
             for (int i = 0; i < hauteur; i++) {
                 bitmapResult.setPixel(j, i, bitmapCurrent.getPixel(j, i));
             }

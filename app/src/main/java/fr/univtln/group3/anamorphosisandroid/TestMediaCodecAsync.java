@@ -29,7 +29,7 @@ public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Void> {
 
 
         PixelsExtractor pixelsExtractor = new PixelsExtractor(bitmapResult,
-                PixelsExtractor.Direction.GAUCHE_DROITE,
+                PixelsExtractor.Direction.DROITE_GAUCHE,
                 frameExtractor.getWidth(),
                 frameExtractor.getHeight(),
                 frameExtractor.getNbFrames());
