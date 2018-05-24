@@ -1,23 +1,19 @@
-package fr.univtln.group3.anamorphosisandroid;
+package fr.univtln.group3.anamorphosisandroid.Utility;
 
 import android.graphics.Bitmap;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import fr.univtln.group3.anamorphosisandroid.Utility.CodecOutputSurface;
-
 import static junit.framework.Assert.fail;
 
-public class ExtractMpegFrameByOne{
+public class FrameExtractor {
 
     // Principal
     CodecOutputSurface outputSurface;
@@ -54,15 +50,17 @@ public class ExtractMpegFrameByOne{
     }
 
     public int getNbFrames(){
-        return (int) (format.getLong(MediaFormat.KEY_DURATION) * format.getInteger(MediaFormat.KEY_FRAME_RATE) / 1000000);
+        System.out.println("duration: "+format.getLong(MediaFormat.KEY_DURATION));
+        System.out.println("fps: "+format.getInteger(MediaFormat.KEY_FRAME_RATE));
+        return (int) ((format.getLong(MediaFormat.KEY_DURATION) * format.getInteger(MediaFormat.KEY_FRAME_RATE)) / 1000000);
     }
 
-    protected void configure(String videoPath) {
+    public FrameExtractor(String videoPath) {
         try {
             // Save videoPath
             this.videoPath = videoPath;
 
-            System.out.println(videoPath);
+//            System.out.println(videoPath);
 
             // Select trackIndex
             File inputFile = new File(videoPath);
@@ -113,7 +111,7 @@ public class ExtractMpegFrameByOne{
             }
             e.printStackTrace();
         }
-        if (VERBOSE) Log.d(TAG, "ExtractMpegFrameByOne configured");
+        if (VERBOSE) Log.d(TAG, "FrameExtractor configured");
     }
 
     public Bitmap getNextBitmap() {
@@ -195,8 +193,6 @@ public class ExtractMpegFrameByOne{
                     outputSurface.awaitNewImage();
                     outputSurface.drawImage(true);
 
-//                        File outputFile = new File(FILES_DIR,
-//                                String.format("frame-%02d.png", decodeCount));
                     long startWhen = System.nanoTime();
                     bitmap = outputSurface.displayFrame();
                     if (VERBOSE) Log.d(TAG, "decodeCount: " + decodeCount);

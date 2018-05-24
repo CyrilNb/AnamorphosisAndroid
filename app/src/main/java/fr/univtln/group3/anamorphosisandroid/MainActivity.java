@@ -10,17 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import org.bytedeco.javacv.AndroidFrameConverter;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameGrabber;
-import org.bytedeco.javacv.OpenCVFrameGrabber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +60,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
                 System.out.println("*-*-*-*-*-DEBUT-*-*-*-*-*");
-//                new TraitementAsync(imageViewResult).execute(selectedVideoPath);
                 new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
-//                new ExtractMpegFrames(selectedVideoPath, imageViewResult).execute();
                 System.out.println("*-*-*-*-*- FIN -*-*-*-*-*");
             } else {
                 System.out.println("video path is null");
