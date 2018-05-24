@@ -7,8 +7,6 @@ import android.widget.ImageView;
 import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
 import fr.univtln.group3.anamorphosisandroid.Utility.PixelsExtractor;
 
-//import org.bytedeco.javacv.FFmpegFrameGrabber;
-//import org.bytedeco.javacv.FrameGrabber;
 
 public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Void> {
 

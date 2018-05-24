@@ -19,7 +19,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import fr.univtln.group3.anamorphosisandroid.asyncTasks.TraitementAsync;
 
 
 public class MainActivity extends AppCompatActivity {
