@@ -19,7 +19,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import fr.univtln.group3.anamorphosisandroid.asyncTasks.TraitementAsync;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -61,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
                 System.out.println("*-*-*-*-*-DEBUT-*-*-*-*-*");
-                TraitementAsync async = new TraitementAsync(imageViewResult);
-                async.execute(selectedVideoPath);
+                new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
                 System.out.println("*-*-*-*-*- FIN -*-*-*-*-*");
             } else {
                 System.out.println("video path is null");
