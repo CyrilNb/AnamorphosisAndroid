@@ -1,6 +1,8 @@
 package fr.univtln.group3.anamorphosisandroid;
 
 
+import static java.lang.Math.abs;
+
 public class AlgoCourbe {
 
     private final int pictureWidth = 720;
@@ -109,9 +111,22 @@ public class AlgoCourbe {
         return new float[]{x, y};
     }
 
+    private float[] getPoints(float[] droite){
+        float y0 = f2x(droite, 0);
+        float x0 = f2y(droite, 0);
+        float xHeight = f2y(droite, pictureHeight);
+
+        float x1 = (y0 < pictureHeight && y0 > 0) ? 0 : ( (x0 < xHeight) ? x0 : xHeight);
+        float y1 = f2x(droite, x1);
+
+        return new float[]{x1, y1};
+    }
+
     private String getSens(){
-        float deltaX;
-        float deltaY;
-        return new String();
+        float[] ptCourante = getPoints(perpendiculaireCourante);
+        float[] ptPrecedente = getPoints(perpendiculairePrecedente);
+        float deltaX = abs(ptCourante[0] - ptPrecedente[0]);
+        float deltaY = abs(ptCourante[1] - ptPrecedente[1]);
+        return (deltaX > deltaY) ? "NS" : "EW";
     }
 }
