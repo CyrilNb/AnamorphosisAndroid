@@ -1,12 +1,7 @@
 package fr.univtln.group3.anamorphosisandroid;
 
 
-import android.util.Log;
-
-import static java.lang.Math.abs;
-import static java.lang.Math.acos;
-import static java.lang.Math.sqrt;
-import static java.lang.Math.toDegrees;
+import static java.lang.Math.*;
 
 public class AlgoCourbe {
 
@@ -18,6 +13,8 @@ public class AlgoCourbe {
     private Droite perpendiculairePrecedente;
     private float[][] pointsCourbe;
 
+    int position = 1;
+
     public enum CONTRAINTE{
         NW,
         SW,
@@ -26,7 +23,18 @@ public class AlgoCourbe {
     }
     private CONTRAINTE contrainte;
 
-    private Droite calculeTangente(int position){
+    public AlgoCourbe(CONTRAINTE contrainte) {
+        float[][] L = {{0,0}, {1280,0}, {0,720}, {1280,720}};
+        pointsCourbe = bezier(L, 100);
+
+//        for (int i= 0; i<101; i++){
+//            System.out.println("pt: " + pointsCourbe[i][0] + " ," + pointsCourbe[i][1]);
+//        }
+
+        this.contrainte = contrainte;
+    }
+
+    private Droite calculeTangente(){
 
         float numerateur = pointsCourbe[position-1][1] - pointsCourbe[position+1][1];
         float denominateur = pointsCourbe[position-1][0] - pointsCourbe[position+1][0];
@@ -38,65 +46,115 @@ public class AlgoCourbe {
         return new Droite(coeffDirecteur, ordonneeOrigine, null);
     }
 
-    private Droite calculePerpendiculaire(int position, Droite tangente){
+    public void calculePerpendiculaire(){
+
+        perpendiculairePrecedente = perpendiculaireCourante;
+        Droite tangente = calculeTangente();
 
         if (tangente.getXcst() != null){  // perpendiculaire horizontale
-            return new Droite(0f, pointsCourbe[position][1], null);
+            perpendiculaireCourante =  new Droite(0f, pointsCourbe[position][1], null);
         }
 
-        if (tangente.getCoeffDirecteur() == 0){  // tangente horizontale y=cst donc perpendiculaire verticale x=cst
-            return new Droite(null, null, pointsCourbe[position][0]);
+        else if (tangente.getCoeffDirecteur() == 0){  // tangente horizontale y=cst donc perpendiculaire verticale x=cst
+            perpendiculaireCourante =  new Droite(null, null, pointsCourbe[position][0]);
         }
-
-        float coeffDirecteur = -1/tangente.getCoeffDirecteur();
-        float ordonneeOrigine = pointsCourbe[position][1] - coeffDirecteur * pointsCourbe[position][0];
-        return new Droite(coeffDirecteur, ordonneeOrigine, null);
+        else {
+            float coeffDirecteur = -1 / tangente.getCoeffDirecteur();
+            float ordonneeOrigine = pointsCourbe[position][1] - coeffDirecteur * pointsCourbe[position][0];
+            perpendiculaireCourante = new Droite(coeffDirecteur, ordonneeOrigine, null);
+        }
     }
 
-    private void remplissage(){
+    public void remplissage(){
+
+        calculePerpendiculaire();
+        System.out.println("position: " + position);
+        System.out.println("point courant: " + pointsCourbe[position][0] + " ," + pointsCourbe[position][1]);
+        if (perpendiculairePrecedente != null) {
+            System.out.println("perpendiculaire précédente: " + perpendiculairePrecedente.getCoeffDirecteur() + " *x + " + perpendiculairePrecedente.getOrdOrigine());
+        }
+        else{
+            System.out.println("perpendiculaire precedente is null");
+        }
+        if (perpendiculaireCourante != null) {
+            System.out.println("perpendiculaire courante: " + perpendiculaireCourante.getCoeffDirecteur() + " *x + " + perpendiculaireCourante.getOrdOrigine());
+        }
+        else{
+            System.out.println("perpendiculaire courante is null");
+        }
 
         if (perpendiculaireCourante == null ){
             // erreur
-            Log.d(TAG, "erreur, aucune perpendiculaire n'a été calculée");
+            System.out.println("erreur, aucune perpendiculaire n'a été calculée");
         }
         else if (perpendiculairePrecedente == null){
             //  première perpendiculaire
+            System.out.println("rempli debut");
             remplirDebut();
         }
 
         else {
+            // entre
+            System.out.println("rempli entre");
             String sens = getSens();
-            switch (sens) {
-                case "HORIZONTAL":
-                    rempliLigne();
-                    break;
-                case "VERTICAL":
-                    rempliColonne();
-                    break;
-                case "PAV":
-                    rempliPAV();
-                    break;
-                case "PA":
-                    rempliColonne();
-                    break;
+            if (sens.equals("HORIZONTAL")) {
+                rempliLigne();
+
+            } else if (sens.equals("VERTICAL")) {
+                rempliColonne();
+
+            } else if (sens.equals("PAV")) {
+                rempliPAV();
+
+            } else if (sens.equals("PA")) {
+                rempliColonne();
+
             }
         }
+        position++;
     }
 
     private void rempliLigne(){
+        System.out.println("rempli ligne");
         for (int y = 0; y < pictureHeight; y++) {
-            float x1 = perpendiculaireCourante.f2y(y);
-            float x2 = perpendiculairePrecedente.f2y(y);
+            int x1 = (int) perpendiculaireCourante.f2y(y);
+            int x2 = (int) perpendiculairePrecedente.f2y(y);
             System.out.println("rempli droite ("+x1+","+y+") ("+x2+","+y+").");
         }
     }
 
     private void rempliColonne(){
+        System.out.println("rempli colonne");
         for (int x = 0; x < pictureWidth; x++) {
-            float y1 = perpendiculaireCourante.f2x(x);
-            float y2 = perpendiculairePrecedente.f2x(x);
-            System.out.println("rempli droite ("+x+","+y1+") ("+x+","+y2+").");
+            int y1 = (int) perpendiculaireCourante.f2x(x);
+            int y2 = (int) perpendiculairePrecedente.f2x(x);
+            int[] result = ajustY(y1, y2);
+            if (result[2]==1) {
+                y1 = result[0];
+                y2 = result[1];
+                System.out.println("rempli droite (" + x + "," + y1 + ") (" + x + "," + y2 + ").");
+            }
         }
+    }
+
+    private int[] ajustY(int y1, int y2){
+        int[] result = {y1, y2, 1};
+        if ((y1>=0 && y1<=pictureHeight) && (y2>=0 && y2<=pictureHeight)){
+            return result;
+        }
+        else if (y1>=0 && y1<=pictureHeight){
+            if (y2<0) result[1] = 0;
+            else result[1] = pictureHeight;
+        }
+        else if(y2>=0 && y2<=pictureHeight) {
+            if (y1<0) result[0] = 0;
+            else result[0] = pictureHeight;
+        }
+        else{
+            result[2] = 0;
+        }
+
+        return result;
     }
 
     private void rempliPAV(){
@@ -104,7 +162,7 @@ public class AlgoCourbe {
         float xcst2 = perpendiculairePrecedente.getXcst();
         for (int y = 0; y < pictureHeight; y++) {
             System.out.println("rempli droite ("+ xcst1+","+y+") ("+
-                                xcst2+","+y+").");
+                    xcst2+","+y+").");
         }
     }
 
@@ -113,6 +171,7 @@ public class AlgoCourbe {
         int x1, y1, x2, y2;
         switch (contrainte) {
             case SE:
+                System.out.println("remplisage debut (contrainte SE) ");
                 ordIntersection = (int) perpendiculaireCourante.intersection(new Droite(null, null, 0f))[1];
                 ordonnéeRemplissage = (ordIntersection > 0) ? ordIntersection : 0;
                 while (ordonnéeRemplissage < pictureHeight) {
@@ -127,12 +186,12 @@ public class AlgoCourbe {
                     }
 
                     //  appelle foction remplissagePixel(x1, y1, x2, y2)
-                    System.out.println("remplisage debut (contrainte SE) ");
                     ordonnéeRemplissage++;
                 }
                 break;
 
             case NE:
+                System.out.println("remplisage debut (contrainte NE) ");
                 ordonnéeRemplissage = 0;
                 while (ordonnéeRemplissage < perpendiculaireCourante.f2x(0) && ordonnéeRemplissage < pictureHeight) {
 
@@ -146,12 +205,13 @@ public class AlgoCourbe {
                     }
 
                     //  appelle fonction remplissagePixels(x1, y1, x2, y2)
-                    System.out.println("remplisage debut (contrainte NE) ");
+                    System.out.println("rempli droite ("+x1+","+y1+") ("+x2+","+y2+").");
                     ordonnéeRemplissage++;
                 }
                 break;
 
             case NW:
+                System.out.println("remplisage debut (contrainte NW) ");
                 ordonnéeRemplissage = 0;
                 while (ordonnéeRemplissage < perpendiculaireCourante.f2x(pictureWidth) && ordonnéeRemplissage < pictureWidth) {
 
@@ -165,12 +225,12 @@ public class AlgoCourbe {
                     }
 
                     //  appelle fonction remplissagePixels(x1, y1, x2, y2)
-                    System.out.println("remplisage debut (contrainte NW) ");
                     ordonnéeRemplissage++;
                 }
                 break;
 
             case SW:
+                System.out.println("remplisage debut (contrainte SW) ");
                 ordIntersection = (int) perpendiculaireCourante.intersection(new Droite(null, null, (float) pictureWidth))[1];
                 ordonnéeRemplissage = (ordIntersection > 0) ? ordIntersection : 0;
                 while (ordonnéeRemplissage < pictureHeight){
@@ -185,7 +245,6 @@ public class AlgoCourbe {
                     }
 
                     //  appelle fonction remplissagePixels(x1, y1, x2, y2)
-                    System.out.println("remplisage debut (contrainte SW) ");
                     ordonnéeRemplissage ++;
                 }
                 break;
@@ -217,5 +276,36 @@ public class AlgoCourbe {
         double angle = getAngle(ptIntersection, ptCourante, ptPrecedente);
 
         return (angle > 90) ? "HORIZONTAL" : "VERTICAL";
+    }
+
+
+    public float[][] bezier(float[][] L, int n) {
+        // L : 4 points de controle
+        // n : nombre de points tracés
+        float u = 0;
+        float[][] l_points = new float[n+1][2];
+        for (int i=0; i<n+1; i++){
+            float[] point = bezier_r(L, n, u);
+            l_points[i][0] = point[0];
+            l_points[i][1] = point[1];
+            u += 1f / n;
+        }
+        return l_points;
+    }
+
+
+    public float[] bezier_r(float[][]L, int n, float u) {
+        int N = L.length - 1;
+        float[][] newL = new float[N][2];
+        for (int i=0; i<N; i++) {
+            newL[i][0] = (L[i][0] * (1 - u) + L[i + 1][0] * u);
+            newL[i][1] = (L[i][1] * (1 - u) + L[i + 1][1] * u);
+        }
+        if (newL.length!= 1){
+            return bezier_r(newL, 1, u);
+        }
+        else{
+            return newL[0];
+        }
     }
 }
