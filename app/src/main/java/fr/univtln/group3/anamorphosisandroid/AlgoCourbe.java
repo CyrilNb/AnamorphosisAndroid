@@ -1,6 +1,8 @@
 package fr.univtln.group3.anamorphosisandroid;
 
 
+import android.graphics.Bitmap;
+
 import static java.lang.Math.*;
 
 public class AlgoCourbe {
@@ -14,6 +16,7 @@ public class AlgoCourbe {
     private float[][] pointsCourbe;
 
     int position = 1;
+    Bitmap bitmapresult;
 
     public enum CONTRAINTE{
         NW,
@@ -34,7 +37,7 @@ public class AlgoCourbe {
         this.contrainte = contrainte;
     }
 
-    private Droite calculeTangente(){
+    private Droite calculTangente(){
 
         float numerateur = pointsCourbe[position-1][1] - pointsCourbe[position+1][1];
         float denominateur = pointsCourbe[position-1][0] - pointsCourbe[position+1][0];
@@ -46,10 +49,10 @@ public class AlgoCourbe {
         return new Droite(coeffDirecteur, ordonneeOrigine, null);
     }
 
-    public void calculePerpendiculaire(){
+    public void calculPerpendiculaire(){
 
         perpendiculairePrecedente = perpendiculaireCourante;
-        Droite tangente = calculeTangente();
+        Droite tangente = calculTangente();
 
         if (tangente.getXcst() != null){  // perpendiculaire horizontale
             perpendiculaireCourante =  new Droite(0f, pointsCourbe[position][1], null);
@@ -67,51 +70,59 @@ public class AlgoCourbe {
 
     public void remplissage(){
 
-        calculePerpendiculaire();
-        System.out.println("position: " + position);
-        System.out.println("point courant: " + pointsCourbe[position][0] + " ," + pointsCourbe[position][1]);
-        if (perpendiculairePrecedente != null) {
-            System.out.println("perpendiculaire précédente: " + perpendiculairePrecedente.getCoeffDirecteur() + " *x + " + perpendiculairePrecedente.getOrdOrigine());
-        }
-        else{
-            System.out.println("perpendiculaire precedente is null");
-        }
-        if (perpendiculaireCourante != null) {
-            System.out.println("perpendiculaire courante: " + perpendiculaireCourante.getCoeffDirecteur() + " *x + " + perpendiculaireCourante.getOrdOrigine());
-        }
-        else{
-            System.out.println("perpendiculaire courante is null");
-        }
+        calculPerpendiculaire();
+//        System.out.println("position: " + position);
+//        System.out.println("point courant: " + pointsCourbe[position][0] + " ," + pointsCourbe[position][1]);
+//        if (perpendiculairePrecedente != null) {
+//            System.out.println("perpendiculaire précédente: " + perpendiculairePrecedente.getCoeffDirecteur() + " *x + " + perpendiculairePrecedente.getOrdOrigine());
+//        }
+//        else{
+//            System.out.println("perpendiculaire precedente is null");
+//        }
+//        if (perpendiculaireCourante != null) {
+//            System.out.println("perpendiculaire courante: " + perpendiculaireCourante.getCoeffDirecteur() + " *x + " + perpendiculaireCourante.getOrdOrigine());
+//        }
+//        else{
+//            System.out.println("perpendiculaire courante is null");
+//        }
 
-        if (perpendiculaireCourante == null ){
-            // erreur
-            System.out.println("erreur, aucune perpendiculaire n'a été calculée");
-        }
-        else if (perpendiculairePrecedente == null){
-            //  première perpendiculaire
-            System.out.println("rempli debut");
-            remplirDebut();
-        }
-
-        else {
-            // entre
-            System.out.println("rempli entre");
-            String sens = getSens();
-            if (sens.equals("HORIZONTAL")) {
-                rempliLigne();
-
-            } else if (sens.equals("VERTICAL")) {
-                rempliColonne();
-
-            } else if (sens.equals("PAV")) {
-                rempliPAV();
-
-            } else if (sens.equals("PA")) {
-                rempliColonne();
-
+        while (position < pointsCourbe.length) {
+            if (perpendiculaireCourante == null) {
+                // erreur
+                System.out.println("erreur, aucune perpendiculaire n'a été calculée");
+            } else if (perpendiculairePrecedente == null) {
+                //  première perpendiculaire
+                System.out.println("rempli debut");
+                remplirDebutFin();
             }
+
+            else {
+                // entre
+                System.out.println("rempli entre");
+                String sens = getSens();
+                switch (sens) {
+                    case "HORIZONTAL":
+                        rempliLigne();
+
+                        break;
+                    case "VERTICAL":
+                        rempliColonne();
+
+                        break;
+                    case "PAV":
+                        rempliPAV();
+
+                        break;
+                    case "PA":
+                        rempliColonne();
+
+                        break;
+                }
+            }
+            position++;
         }
-        position++;
+        contrainte = contrainteFin();
+        remplirDebutFin();
     }
 
     private void rempliLigne(){
@@ -166,7 +177,7 @@ public class AlgoCourbe {
         }
     }
 
-    private void remplirDebut(){
+    private void remplirDebutFin(){
         int ordonnéeRemplissage, ordIntersection;
         int x1, y1, x2, y2;
         switch (contrainte) {
@@ -294,7 +305,7 @@ public class AlgoCourbe {
     }
 
 
-    public float[] bezier_r(float[][]L, int n, float u) {
+    private float[] bezier_r(float[][] L, int n, float u) {
         int N = L.length - 1;
         float[][] newL = new float[N][2];
         for (int i=0; i<N; i++) {
@@ -307,5 +318,22 @@ public class AlgoCourbe {
         else{
             return newL[0];
         }
+    }
+
+    private CONTRAINTE contrainteFin(){
+        switch (contrainte){
+            case SE:
+                return CONTRAINTE.NW;
+
+            case SW:
+                return CONTRAINTE.NE;
+
+            case NE:
+                return CONTRAINTE.SW;
+
+            case NW:
+                return CONTRAINTE.SE;
+        }
+        return null;
     }
 }
