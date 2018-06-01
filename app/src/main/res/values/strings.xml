@@ -2,4 +2,6 @@
     <string name="app_name">AnamorphosisAndroid</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="start">record</string>
+    <string name="stop">Stop</string>
 </resources>
