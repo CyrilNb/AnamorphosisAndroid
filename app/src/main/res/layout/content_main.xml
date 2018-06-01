@@ -15,11 +15,19 @@
         android:layout_height="wrap_content"
         android:text="GALLERY" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_texture_to_bitmap"
+        app:layout_constraintTop_toBottomOf="@id/btnLoadGallery"
+        android:text="@string/anti_aliasing"
+        android:enabled="false"/>
+
     <ImageView
         android:id="@+id/imgViewResult"
         android:layout_width="match_parent"
         android:layout_height="431dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="25dp"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintTop_toBottomOf="@+id/btnLoadGallery" />
 

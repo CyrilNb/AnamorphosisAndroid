@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     Button btnLoadGallery;
     @BindView(R.id.imgViewResult)
     ImageView imageViewResult;
+    @BindView(R.id.btn_texture_to_bitmap)
+    Button tToB;
 
     List<Bitmap> listFrames;
 
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
                 System.out.println("*-*-*-*-*-DEBUT-*-*-*-*-*");
-                new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
+                new TestMediaCodecAsync(imageViewResult,tToB).execute(selectedVideoPath);
                 System.out.println("*-*-*-*-*- FIN -*-*-*-*-*");
             } else {
                 System.out.println("video path is null");
@@ -83,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(galleryIntent, LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE);
 
+    }
+
+    @OnClick(R.id.btn_texture_to_bitmap)
+    public void onTextureToBitmapClicked(){
+        new TestAntiAliasFilter(imageViewResult,tToB).execute();
     }
 
     /**
