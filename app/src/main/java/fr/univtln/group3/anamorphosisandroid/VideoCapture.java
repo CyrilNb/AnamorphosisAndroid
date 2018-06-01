@@ -16,7 +16,7 @@ import android.widget.Toast;
 import java.io.File;
 
 
-public class MainActivity extends Activity {
+public class VideoCapture extends Activity {
     private final int REQUEST_CODE = 100;
     private final String[] STORAGE_PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[1] == PackageManager.PERMISSION_GRANTED){
 
-                Toast.makeText(MainActivity.this, "Permission granted !!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permission granted !!", Toast.LENGTH_SHORT).show();
                 captureLaunch();
 
             }
