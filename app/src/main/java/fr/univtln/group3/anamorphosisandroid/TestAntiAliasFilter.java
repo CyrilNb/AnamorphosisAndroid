@@ -1,10 +1,8 @@
 package fr.univtln.group3.anamorphosisandroid;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -18,7 +16,7 @@ public class TestAntiAliasFilter extends AsyncTask<Void,Bitmap,Void> {
     ImageView imageViewResult;
     //Canvas canvas;
     Button btn;
-    ConvolutionFilter convolutionMatrix;
+
 
     public TestAntiAliasFilter(ImageView imageView, Button btn){
         imageViewResult = imageView;
@@ -27,8 +25,6 @@ public class TestAntiAliasFilter extends AsyncTask<Void,Bitmap,Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-
-        //Log.d("doInBackground", "doInBackground");
 
         /**
          * Récupère la BitmapDrawable qui est dans l'ImageView
@@ -39,6 +35,8 @@ public class TestAntiAliasFilter extends AsyncTask<Void,Bitmap,Void> {
         /**
          * Ici on peut choisir quel algo d'anti-aliasing on veut appliquer à l'image (Bitmap)
          */
+
+        bitmapResult = ConvolutionFilter.ConvoFilterMethod.gaussianBlurFilter(bitmapResult);
 
 
         /**
