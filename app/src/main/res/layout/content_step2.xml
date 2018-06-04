@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
+    tools:context=".Step2Activity">
+
+    <TextView
+        android:id="@+id/txtViewStep2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center"
+        android:layout_margin="40dp"
+        android:text="@string/txt_step2"
+        android:textColor="#e39f38"
+        android:textSize="28sp" />
+
+
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="wrap_content"
+        android:layout_height="212dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="60dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnClassicModeSelected"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/roundedcorner"
+            android:drawableTop="@drawable/ic_classic"
+            android:text="@string/btn_classic_mode" />
+
+        <Button
+            android:id="@+id/btnCustomModeSelected"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/roundedcorner"
+            android:drawableTop="@drawable/ic_custom"
+            android:text="@string/btn_custom_mode" />
+    </LinearLayout>
+
+</LinearLayout>
