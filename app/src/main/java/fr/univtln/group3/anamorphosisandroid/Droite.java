@@ -37,7 +37,7 @@ public class Droite {
             return new float[] {xcst, droite.f2x(xcst)};
         }
         else if (droite.getXcst() != null){
-            return new float[] {droite.getXcst(), f2x(xcst)};
+            return new float[] {droite.getXcst(), f2x(droite.getXcst())};
         }
         float x = (ordOrigine - droite.getOrdOrigine()) / (coeffDirecteur - droite.coeffDirecteur);
         float y = f2x(x);

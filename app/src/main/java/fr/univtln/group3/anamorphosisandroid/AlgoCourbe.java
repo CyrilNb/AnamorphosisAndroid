@@ -2,6 +2,7 @@ package fr.univtln.group3.anamorphosisandroid;
 
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import static java.lang.Math.*;
 
@@ -9,14 +10,20 @@ public class AlgoCourbe {
 
     private String TAG = "AlgoCourbe";
 
-    private final int pictureWidth = 720;
-    private final int pictureHeight = 1280;
+    private int pictureWidth;
+    private int pictureHeight;
     private Droite perpendiculaireCourante;
     private Droite perpendiculairePrecedente;
     private float[][] pointsCourbe;
+    private int nbBitmap;
+    private int sautPoint;
+    private float sautPonctuel;
+    private boolean jumpBitmap = false;
 
-    int position = 1;
-    Bitmap bitmapresult;
+    private int bitmapTraitees = 0;
+    private int compteurSautPonctuel = 0;
+    private int positionPoint = 1;
+    Bitmap bitmapResult;
 
     public enum CONTRAINTE{
         NW,
@@ -26,26 +33,38 @@ public class AlgoCourbe {
     }
     private CONTRAINTE contrainte;
 
-    public AlgoCourbe(CONTRAINTE contrainte) {
-        float[][] L = {{0,0}, {1280,0}, {0,720}, {1280,720}};
-        pointsCourbe = bezier(L, 100);
-
-//        for (int i= 0; i<101; i++){
-//            System.out.println("pt: " + pointsCourbe[i][0] + " ," + pointsCourbe[i][1]);
-//        }
-
+    public AlgoCourbe(Bitmap bitmapResult, float[][] pointsCourbe, CONTRAINTE contrainte, int nbBitmap, int pictureHeight, int pictureWidth) {
+        this.bitmapResult = bitmapResult;
+        this.pointsCourbe = pointsCourbe;
         this.contrainte = contrainte;
+        this.nbBitmap = nbBitmap;
+        this.pictureHeight = pictureHeight;
+        this.pictureWidth = pictureWidth;
+
+        sautPoint = (pointsCourbe.length - 2) / nbBitmap;
+        sautPonctuel = (float) nbBitmap / ((float) (pointsCourbe.length - 2) % (float) nbBitmap);
+        if ((pointsCourbe.length - 2) < nbBitmap) jumpBitmap = true;
+
+        System.out.println("largeur: " + pictureWidth);
+        System.out.println("hauteru: " + pictureHeight);
+
+        System.out.println("nbPoints: " + pointsCourbe.length);
+        System.out.println("nbBitmap: "+ nbBitmap);
+        System.out.println("SautPoint: " + sautPoint);
+        System.out.println("SautPonctuel: " + sautPonctuel);
+        System.out.println("jump: " + jumpBitmap);
+
     }
 
     private Droite calculTangente(){
 
-        float numerateur = pointsCourbe[position-1][1] - pointsCourbe[position+1][1];
-        float denominateur = pointsCourbe[position-1][0] - pointsCourbe[position+1][0];
+        float numerateur = pointsCourbe[positionPoint -1][1] - pointsCourbe[positionPoint +1][1];
+        float denominateur = pointsCourbe[positionPoint -1][0] - pointsCourbe[positionPoint +1][0];
         if (denominateur == 0){   // droite verticale x=cst
-            return new Droite(null, null, pointsCourbe[position][0]);
+            return new Droite(null, null, pointsCourbe[positionPoint][0]);
         }
         float coeffDirecteur = numerateur / denominateur;
-        float ordonneeOrigine = pointsCourbe[position-1][1] - coeffDirecteur * pointsCourbe[position-1][0];
+        float ordonneeOrigine = pointsCourbe[positionPoint -1][1] - coeffDirecteur * pointsCourbe[positionPoint -1][0];
         return new Droite(coeffDirecteur, ordonneeOrigine, null);
     }
 
@@ -55,86 +74,87 @@ public class AlgoCourbe {
         Droite tangente = calculTangente();
 
         if (tangente.getXcst() != null){  // perpendiculaire horizontale
-            perpendiculaireCourante =  new Droite(0f, pointsCourbe[position][1], null);
+            perpendiculaireCourante =  new Droite(0f, pointsCourbe[positionPoint][1], null);
         }
 
         else if (tangente.getCoeffDirecteur() == 0){  // tangente horizontale y=cst donc perpendiculaire verticale x=cst
-            perpendiculaireCourante =  new Droite(null, null, pointsCourbe[position][0]);
+            perpendiculaireCourante =  new Droite(null, null, pointsCourbe[positionPoint][0]);
         }
         else {
             float coeffDirecteur = -1 / tangente.getCoeffDirecteur();
-            float ordonneeOrigine = pointsCourbe[position][1] - coeffDirecteur * pointsCourbe[position][0];
+            float ordonneeOrigine = pointsCourbe[positionPoint][1] - coeffDirecteur * pointsCourbe[positionPoint][0];
             perpendiculaireCourante = new Droite(coeffDirecteur, ordonneeOrigine, null);
         }
     }
 
-    public void remplissage(){
+    public void remplissage(Bitmap bitmapCurrent){
+        System.out.println("Position: " + positionPoint);
+        if (bitmapTraitees < nbBitmap) {
+            if (positionPoint < pointsCourbe.length - 1){
+                calculPerpendiculaire();
+                if (perpendiculaireCourante == null) {
+                    // erreur
+                    System.out.println("erreur, aucune perpendiculaire n'a été calculée");
+                } else if (perpendiculairePrecedente == null) {
+                    //  première perpendiculaire
+                    System.out.println("rempli debut");
+                    remplirDebutFin(bitmapCurrent);
+                } else {
+                    // entre
+                    System.out.println("rempli entre");
+                    String sens = getSens();
+                    switch (sens) {
+                        case "HORIZONTAL":
+                            rempliLigne(bitmapCurrent);
 
-        calculPerpendiculaire();
-//        System.out.println("position: " + position);
-//        System.out.println("point courant: " + pointsCourbe[position][0] + " ," + pointsCourbe[position][1]);
-//        if (perpendiculairePrecedente != null) {
-//            System.out.println("perpendiculaire précédente: " + perpendiculairePrecedente.getCoeffDirecteur() + " *x + " + perpendiculairePrecedente.getOrdOrigine());
-//        }
-//        else{
-//            System.out.println("perpendiculaire precedente is null");
-//        }
-//        if (perpendiculaireCourante != null) {
-//            System.out.println("perpendiculaire courante: " + perpendiculaireCourante.getCoeffDirecteur() + " *x + " + perpendiculaireCourante.getOrdOrigine());
-//        }
-//        else{
-//            System.out.println("perpendiculaire courante is null");
-//        }
+                            break;
+                        case "VERTICAL":
+                            rempliColonne(bitmapCurrent);
 
-        while (position < pointsCourbe.length) {
-            if (perpendiculaireCourante == null) {
-                // erreur
-                System.out.println("erreur, aucune perpendiculaire n'a été calculée");
-            } else if (perpendiculairePrecedente == null) {
-                //  première perpendiculaire
-                System.out.println("rempli debut");
-                remplirDebutFin();
-            }
+                            break;
+                        case "PAV":
+                            rempliPAV(bitmapCurrent);
 
-            else {
-                // entre
-                System.out.println("rempli entre");
-                String sens = getSens();
-                switch (sens) {
-                    case "HORIZONTAL":
-                        rempliLigne();
+                            break;
+                        case "PA":
+                            rempliColonne(bitmapCurrent);
 
-                        break;
-                    case "VERTICAL":
-                        rempliColonne();
-
-                        break;
-                    case "PAV":
-                        rempliPAV();
-
-                        break;
-                    case "PA":
-                        rempliColonne();
-
-                        break;
+                            break;
+                    }
                 }
+            } else {
+                System.out.println("rempli FIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                contrainte = contrainteFin();
+                remplirDebutFin(bitmapCurrent);
             }
-            position++;
+
         }
-        contrainte = contrainteFin();
-        remplirDebutFin();
+        else{
+            Log.d(TAG, "Nombre de botmaps dépassé.");
+        }
     }
 
-    private void rempliLigne(){
+    private void rempliLigne(Bitmap bitmapCurrent){
         System.out.println("rempli ligne");
         for (int y = 0; y < pictureHeight; y++) {
             int x1 = (int) perpendiculaireCourante.f2y(y);
             int x2 = (int) perpendiculairePrecedente.f2y(y);
-            System.out.println("rempli droite ("+x1+","+y+") ("+x2+","+y+").");
+            int[] result = ajustX(x1, x2);
+            if (result[2] == 1){
+                x1 = result[0];
+                x2 = result[1];
+
+                int minx =  min(x1,x2);
+                int maxx =  max(x1, x2);
+                for (int x = minx; x < maxx; x++) {
+                    bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
+                }
+            }
+//            System.out.println("rempli droite ("+x1+","+y+") ("+x2+","+y+").");
         }
     }
 
-    private void rempliColonne(){
+    private void rempliColonne(Bitmap bitmapCurrent){
         System.out.println("rempli colonne");
         for (int x = 0; x < pictureWidth; x++) {
             int y1 = (int) perpendiculaireCourante.f2x(x);
@@ -143,10 +163,21 @@ public class AlgoCourbe {
             if (result[2]==1) {
                 y1 = result[0];
                 y2 = result[1];
-                System.out.println("rempli droite (" + x + "," + y1 + ") (" + x + "," + y2 + ").");
+//                System.out.println("rempli droite (" + x + "," + y1 + ") (" + x + "," + y2 + ").");
+
+                int miny = min(y1, y2);
+                int maxy = max(y1, y2);
+                for (int y = miny; y < maxy; y++) {
+                    bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
+                }
             }
         }
     }
+
+    private int invertY(int y){
+        return pictureHeight - 1 - y;
+    }
+
 
     private int[] ajustY(int y1, int y2){
         int[] result = {y1, y2, 1};
@@ -168,16 +199,42 @@ public class AlgoCourbe {
         return result;
     }
 
-    private void rempliPAV(){
+    private int[] ajustX(int x1, int x2){
+        int[] result = {x1, x2, 1};
+        if ((x1>=0 && x1<=pictureWidth) && (x2>=0 && x2<=pictureWidth)){
+            return result;
+        }
+        else if (x1>=0 && x1<=pictureWidth){
+            if (x2<0) result[1] = 0;
+            else result[1] = pictureWidth;
+        }
+        else if(x2>=0 && x2<=pictureWidth) {
+            if (x1<0) result[0] = 0;
+            else result[0] = pictureWidth;
+        }
+        else{
+            result[2] = 0;
+        }
+
+        return result;
+    }
+
+
+    private void rempliPAV(Bitmap bitmapCurrent){
         float xcst1 = perpendiculaireCourante.getXcst();
         float xcst2 = perpendiculairePrecedente.getXcst();
+        xcst1 = (xcst1==pictureWidth)?pictureWidth-1:xcst1;
+        xcst2 = (xcst2==pictureWidth)?pictureWidth-1:xcst2;
+        int minx =  min((int) xcst1, (int) xcst2);
+        int maxx =  max((int) xcst1, (int) xcst2);
         for (int y = 0; y < pictureHeight; y++) {
-            System.out.println("rempli droite ("+ xcst1+","+y+") ("+
-                    xcst2+","+y+").");
+//            System.out.println("rempli droite ("+ xcst1+","+y+") ("+xcst2+","+y+").");
+            for (int x = minx; x<maxx; x++)
+            bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
         }
     }
 
-    private void remplirDebutFin(){
+    private void remplirDebutFin(Bitmap bitmapCurrent){
         int ordonnéeRemplissage, ordIntersection;
         int x1, y1, x2, y2;
         switch (contrainte) {
@@ -195,7 +252,6 @@ public class AlgoCourbe {
                     if (x2 > pictureWidth){
                         x2 = pictureWidth;
                     }
-
                     //  appelle foction remplissagePixel(x1, y1, x2, y2)
                     ordonnéeRemplissage++;
                 }
@@ -216,7 +272,11 @@ public class AlgoCourbe {
                     }
 
                     //  appelle fonction remplissagePixels(x1, y1, x2, y2)
-                    System.out.println("rempli droite ("+x1+","+y1+") ("+x2+","+y2+").");
+
+//                    System.out.println("rempli droite ("+x1+","+y1+") ("+x2+","+y2+").");
+                    for (int x=x1;x<x2;x++){
+                        bitmapResult.setPixel(x, y1, bitmapCurrent.getPixel(x, y1));
+                    }
                     ordonnéeRemplissage++;
                 }
                 break;
@@ -232,7 +292,7 @@ public class AlgoCourbe {
                     y2 = ordonnéeRemplissage;
 
                     if (x1 < 0){
-                        x2 = 0;
+                        x1 = 0;
                     }
 
                     //  appelle fonction remplissagePixels(x1, y1, x2, y2)
@@ -242,7 +302,8 @@ public class AlgoCourbe {
 
             case SW:
                 System.out.println("remplisage debut (contrainte SW) ");
-                ordIntersection = (int) perpendiculaireCourante.intersection(new Droite(null, null, (float) pictureWidth))[1];
+                Droite test = new Droite(null, null, (float) pictureWidth);
+                ordIntersection = (int) perpendiculaireCourante.intersection(test)[1];
                 ordonnéeRemplissage = (ordIntersection > 0) ? ordIntersection : 0;
                 while (ordonnéeRemplissage < pictureHeight){
 
@@ -252,10 +313,13 @@ public class AlgoCourbe {
                     y2 = ordonnéeRemplissage;
 
                     if (x1 < 0){
-                        x2 = 0;
+                        x1 = 0;
                     }
 
                     //  appelle fonction remplissagePixels(x1, y1, x2, y2)
+                    for (int x=x1;x<x2;x++){
+                        bitmapResult.setPixel(x, y1, bitmapCurrent.getPixel(x, y1));
+                    }
                     ordonnéeRemplissage ++;
                 }
                 break;
@@ -335,5 +399,26 @@ public class AlgoCourbe {
                 return CONTRAINTE.SE;
         }
         return null;
+    }
+
+    public void extractAndCopy(Bitmap bitmapCurrent){
+        int oneMore = 0;
+        if (bitmapTraitees > compteurSautPonctuel){
+            oneMore = 1;
+            compteurSautPonctuel += sautPonctuel;
+        }
+        if (jumpBitmap && oneMore == 1){
+            remplissage(bitmapCurrent);
+            System.out.println("pos: " + positionPoint);
+            positionPoint ++;
+        }
+        else if (!jumpBitmap){
+            positionPoint += oneMore;
+            remplissage(bitmapCurrent);
+            positionPoint += sautPoint;
+        }
+
+        System.out.println("bitmap traitee: " + bitmapTraitees);
+        bitmapTraitees ++;
     }
 }
