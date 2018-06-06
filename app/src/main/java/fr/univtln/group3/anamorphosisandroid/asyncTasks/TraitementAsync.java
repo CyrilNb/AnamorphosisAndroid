@@ -1,13 +1,19 @@
 package fr.univtln.group3.anamorphosisandroid.asyncTasks;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ImageView;
 
 import org.bytedeco.javacv.AndroidFrameConverter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
+
+import fr.univtln.group3.anamorphosisandroid.Utils;
+import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
 public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
 
@@ -18,9 +24,13 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
     ImageView imageViewResult;
     int recup1, recup2;
     int c;
+    String direction;
+    ResultActivity callerActivity;
 
-    public TraitementAsync(ImageView imageView) {
-        imageViewResult = imageView;
+    public TraitementAsync(ResultActivity caller, ImageView imageView, String direction) {
+        this.imageViewResult = imageView;
+        this.direction = direction;
+        this.callerActivity = caller;
     }
 
     @Override
@@ -192,5 +202,11 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
     @Override
     protected void onProgressUpdate(Bitmap... bitmap) {
         imageViewResult.setImageBitmap(bitmap[0]);
+    }
+
+    @Override
+    protected void onPostExecute(Bitmap bitmap) {
+        super.onPostExecute(bitmap);
+        this.callerActivity.getBtnDownload().setVisibility(View.VISIBLE);
     }
 }

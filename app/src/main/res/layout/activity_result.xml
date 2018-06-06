@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Step2Activity">
+    tools:context=".activities.Step2Activity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -24,6 +24,6 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <include layout="@layout/content_step3" />
+    <include layout="@layout/content_result" />
 
 </android.support.design.widget.CoordinatorLayout>

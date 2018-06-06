@@ -1,13 +1,19 @@
 <resources>
-    <string name="app_name">AnamorphosisAndroid</string>
+    <string name="app_name">Android Anamorphosis</string>
     <string name="btn_gallery">GALLERY</string>
     <string name="btn_camera">CAMERA</string>
     <string name="btn_classic_mode">CLASSIC</string>
     <string name="btn_custom_mode">CUSTOM</string>
     <string name="txt_step1">STEP 1 - Load video</string>
-    <string name="txt_step2">STEP 2 - Select Anamorphosis mode</string>
+    <string name="txt_step2">STEP 2 - Select mode</string>
     <string name="txt_step3_classic">STEP 3 - Select movement</string>
     <string name="txt_step3_custom">STEP 3 - Draw custom movement</string>
     <string name="txt_result">RESULT</string>
+    <string name="btn_down">DOWN</string>
+    <string name="btn_up">UP</string>
+    <string name="btn_right">RIGHT</string>
+    <string name="btn_left">LEFT</string>
+    <string name="btn_download">DOWNLOAD</string>
+    <string name="btn_home">HOME</string>
 
 </resources>

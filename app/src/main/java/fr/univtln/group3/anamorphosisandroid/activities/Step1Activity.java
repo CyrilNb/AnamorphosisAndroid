@@ -1,4 +1,4 @@
-package fr.univtln.group3.anamorphosisandroid;
+package fr.univtln.group3.anamorphosisandroid.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -6,12 +6,15 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fr.univtln.group3.anamorphosisandroid.R;
+import fr.univtln.group3.anamorphosisandroid.Utils;
 
 public class Step1Activity extends AppCompatActivity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -33,10 +36,17 @@ public class Step1Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step1);
         ButterKnife.bind(this);
-
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/LuckiestGuy-Regular.ttf"); // create a typeface from the raw ttf
-
         txtViewStep1.setTypeface(typeface);
+
+        TextView toolbarText = findViewById(R.id.toolbar_text);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbarText != null && toolbar != null) {
+            toolbarText.setText(getTitle());
+            toolbarText.setTypeface(typeface);
+            setSupportActionBar(toolbar);
+        }
+
     }
 
     @Override
@@ -51,7 +61,7 @@ public class Step1Activity extends AppCompatActivity {
                 //TraitementAsync async = new TraitementAsync(imageViewResult);
                 //async.execute(selectedVideoPath);
                 Intent intent = new Intent(getApplicationContext(), Step2Activity.class);
-                intent.putExtra("selectedVideoPath",selectedVideoPath);
+                intent.putExtra("selectedVideoPath", selectedVideoPath);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
