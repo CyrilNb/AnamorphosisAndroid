@@ -27,7 +27,7 @@ public class Droite {
     }
 
     public float f2y(float y){
-        if (coeffDirecteur == 0) Log.d(TAG, "coeff directeur null f2y()");
+        if (coeffDirecteur == 0) System.out.println("PROBBLEME DANS F2Y");;
         return (y - ordOrigine) / coeffDirecteur;
     }
 
@@ -39,7 +39,7 @@ public class Droite {
         else if (droite.getXcst() != null){
             return new float[] {droite.getXcst(), f2x(droite.getXcst())};
         }
-        float x = (ordOrigine - droite.getOrdOrigine()) / (coeffDirecteur - droite.coeffDirecteur);
+        float x = (droite.getOrdOrigine() - ordOrigine) / (coeffDirecteur - droite.getCoeffDirecteur());
         float y = f2x(x);
         return new float[]{x, y};
     }
