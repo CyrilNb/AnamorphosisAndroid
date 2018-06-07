@@ -1,18 +1,15 @@
 package fr.univtln.group3.anamorphosisandroid.asyncTasks;
 
-import android.app.Activity;
-import android.content.pm.ActivityInfo;
+
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
-
 import org.bytedeco.javacv.AndroidFrameConverter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
 
-import fr.univtln.group3.anamorphosisandroid.Utils;
 import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
 public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
@@ -36,9 +33,7 @@ public class TraitementAsync extends AsyncTask<String, Bitmap, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... selectedVideoPath) {
         compteur_numColonneStart = 0; //cpt_h
-
         compteur_numLigneStart = 0; //cpt_h
-
         FrameGrabber frameGrabber = new FFmpegFrameGrabber(selectedVideoPath[0]);
 
         recup1 = 0;
