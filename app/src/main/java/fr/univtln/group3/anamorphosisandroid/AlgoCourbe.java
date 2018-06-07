@@ -107,10 +107,7 @@ public class AlgoCourbe {
 
         if (premierPoint[0] < pointCompare[0] && premierPoint[1] < pointCompare[1]) contrainte = CONTRAINTE.NE;
         else if (premierPoint[0] > pointCompare[0] && premierPoint[1] < pointCompare[1]) contrainte = CONTRAINTE.NW;
-        else if (premierPoint[0] > pointCompare[0] && premierPoint[1] > pointCompare[1]) {
-            System.out.println(" SW !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            contrainte = CONTRAINTE.SW;
-        }
+        else if (premierPoint[0] > pointCompare[0] && premierPoint[1] > pointCompare[1]) contrainte = CONTRAINTE.SW;
         else if (premierPoint[0] < pointCompare[0] && premierPoint[1] > pointCompare[1]) contrainte = CONTRAINTE.SE;
 
     }
@@ -209,7 +206,6 @@ public class AlgoCourbe {
                 if (!isDone) {
 //                    System.out.println("rempli FIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     setContrainte(pointsCourbe.size()-5, pointsCourbe.size()-10);
-                    System.out.println("Contrainte: " + contrainte);
                     remplirDebutFin(bitmapCurrent);
                     isDone = true;
                 }
