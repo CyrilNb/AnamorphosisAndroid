@@ -60,13 +60,9 @@ public class CourbeAsync extends AsyncTask<String, Bitmap, Void> {
 
         int largeur = frameExtractor.getWidth();
         int hauteur = frameExtractor.getHeight();
-        float[][] L = {{0,0}, {0,hauteur}, {largeur,hauteur}, {largeur,0}};
-        List<float[]> pointsCourbe = bezier(L, 230);
+        float[][] L = { {0,0}, {largeur/4, hauteur/4}, {largeur/2, hauteur/2}, {largeur,hauteur}};
+        List<float[]> pointsCourbe = bezier(L, 100);
 
-//        for (float[] i: pointsCourbe
-//             ) {
-//            System.out.println("i : " + i[0] + " " + i[1]);
-//        }
 
         AlgoCourbe algoCourbe = new AlgoCourbe(bitmapResult, pointsCourbe, AlgoCourbe.CONTRAINTE.NE,
                 frameExtractor.getNbFrames(), frameExtractor.getHeight(), frameExtractor.getWidth());
@@ -79,11 +75,6 @@ public class CourbeAsync extends AsyncTask<String, Bitmap, Void> {
                 bitmapCurrentSave = bitmapCurrent;
                 algoCourbe.extractAndCopy(bitmapCurrent);
                 publishProgress(bitmapResult);
-//                try {
-//                    Thread.sleep(3000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
         }
 

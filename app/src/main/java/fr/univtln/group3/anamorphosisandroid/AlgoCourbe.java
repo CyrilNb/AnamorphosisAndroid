@@ -22,11 +22,8 @@ public class AlgoCourbe {
     private Droite perpendiculairePrecedente;
     private List<float[]> pointsCourbe = new ArrayList<>();
     private int nbBitmap;
-    private int sautPoint;
-    private float sautPonctuel;
 
     private int bitmapTraitees = 0;
-    private int compteurSautPonctuel = 0;
     private int positionPoint = 1;
     Bitmap bitmapResult;
 
@@ -49,36 +46,25 @@ public class AlgoCourbe {
         this.pictureWidth = pictureWidth;
 
         majListePoints();
-//        for (float[] i: pointsCourbe
-//                ) {
-//            System.out.println("i : " + i[0] + " " + i[1]);
-//        }
-//        sautPoint = (pointsCourbe.size() - 2) / nbBitmap;
-//        sautPonctuel = (float) nbBitmap / ((float) (pointsCourbe.size() - 2) % (float) nbBitmap);
 
-        System.out.println("largeur: " + pictureWidth);
-        System.out.println("hauteru: " + pictureHeight);
-
-        System.out.println("nbPoints: " + pointsCourbe.size());
-        System.out.println("nbBitmap: "+ nbBitmap);
-        System.out.println("SautPoint: " + sautPoint);
-        System.out.println("SautPonctuel: " + sautPonctuel);
+//        System.out.println("largeur: " + pictureWidth);
+//        System.out.println("hauteru: " + pictureHeight);
+//
+//        System.out.println("nbPoints: " + pointsCourbe.size());
+//        System.out.println("nbBitmap: "+ nbBitmap);
 
     }
 
     private void majListePoints(){
-        System.out.println("MAJ LISTE POINTS");
+//        System.out.println("MAJ LISTE POINTS");
 
         int tailleUtilisee = (pointsCourbe.size() - 2);
 
         if (tailleUtilisee < nbBitmap) {
 
             int pointsARajouter = nbBitmap - tailleUtilisee;
-            System.out.println("points a rajouter: " + pointsARajouter);
             int quotientSaut = pointsARajouter / tailleUtilisee;
-            System.out.println("quotientSaut : " + quotientSaut);
             float reste = ((float) pointsARajouter) % ((float) tailleUtilisee);
-            System.out.println("reste: " + reste);
             float resteSaut;
             if (reste == 0) {
                 resteSaut = tailleUtilisee + 1;
@@ -86,7 +72,10 @@ public class AlgoCourbe {
             else {
                 resteSaut = ((float) tailleUtilisee) / reste;
             }
-            System.out.println("resteSaut: " + resteSaut);
+//            System.out.println("points a rajouter: " + pointsARajouter);
+//            System.out.println("resteSaut: " + resteSaut);
+//            System.out.println("reste: " + reste);
+//            System.out.println("quotientSaut : " + quotientSaut);
 
             float compteurResteSaut = 0;
             int cptCheat = 0;
@@ -173,7 +162,7 @@ public class AlgoCourbe {
                 calculPerpendiculaire();
                 if (perpendiculaireCourante == null) {
                     // erreur
-                    System.out.println("erreur, aucune perpendiculaire n'a été calculée");
+//                    System.out.println("erreur, aucune perpendiculaire n'a été calculée");
                 } else if (perpendiculairePrecedente == null) {
                     //  première perpendiculaire
 //                    System.out.println("rempli debut");
@@ -203,7 +192,7 @@ public class AlgoCourbe {
                 }
             } else {
                 if (!isDone) {
-                    System.out.println("rempli FIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//                    System.out.println("rempli FIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     contrainte = contrainteFin();
                     remplirDebutFin(bitmapCurrent);
                     isDone = true;
@@ -211,44 +200,48 @@ public class AlgoCourbe {
             }
 
         }
-        else{
-            System.out.println("Nombre de botmaps dépassé.");
-        }
+//        else{
+//            System.out.println("Nombre de botmaps dépassé.");
+//
+//        }
     }
 
     private void rempliLigne(Bitmap bitmapCurrent){
-        System.out.println("rempli ligne");
+//        System.out.println("rempli ligne");
         for (int y = 0; y < pictureHeight; y++) {
             int x1 = (int) perpendiculaireCourante.f2y(y);
             int x2 = (int) perpendiculairePrecedente.f2y(y);
-            int[] result = ajustX(x1, x2);
-            if (result[2] == 1){
-                x1 = result[0];
-                x2 = result[1];
 
-                int minx =  min(x1,x2);
-                int maxx =  max(x1, x2);
+            int minx =  min(x1,x2);
+            int maxx =  max(x1, x2) + 1;
+
+            int[] result = ajustX(minx, maxx);
+            if (result[2] == 1){
+                minx = result[0];
+                maxx = result[1];
+
                 for (int x = minx; x < maxx; x++) {
                     bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
+//                    System.out.println("rempli droite ("+x1+","+y+") ("+x2+","+y+").");
                 }
             }
-//            System.out.println("rempli droite ("+x1+","+y+") ("+x2+","+y+").");
         }
     }
 
     private void rempliColonne(Bitmap bitmapCurrent){
-        System.out.println("rempli colonne");
+//        System.out.println("rempli colonne");
         for (int x = 0; x < pictureWidth; x++) {
             int y1 = (int) perpendiculaireCourante.f2x(x);
             int y2 = (int) perpendiculairePrecedente.f2x(x);
-            int[] result = ajustY(y1, y2);
-            if (result[2]==1) {
-                y1 = result[0];
-                y2 = result[1];
-//                System.out.println("rempli droite (" + x + "," + y1 + ") (" + x + "," + y2 + ").");
 
-                int miny = min(y1, y2);
-                int maxy = max(y1, y2);
+            int miny = min(y1, y2);
+            int maxy = max(y1, y2) + 1;
+
+            int[] result = ajustY(miny, maxy);
+            if (result[2]==1) {
+                miny = result[0];
+                maxy = result[1];
+
                 for (int y = miny; y < maxy; y++) {
                     bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
                 }
@@ -322,11 +315,11 @@ public class AlgoCourbe {
 
 
     private void rempliPAV(Bitmap bitmapCurrent){
-        System.out.println("rempli PAV");
+//        System.out.println("rempli PAV");
         float xcst1 = perpendiculaireCourante.getXcst();
         float xcst2 = perpendiculairePrecedente.getXcst();
-        xcst1 = (xcst1==pictureWidth)?pictureWidth-1:xcst1;
-        xcst2 = (xcst2==pictureWidth)?pictureWidth-1:xcst2;
+        xcst1 = (xcst1==pictureWidth) ? pictureWidth-1 : xcst1;
+        xcst2 = (xcst2==pictureWidth) ? pictureWidth-1 : xcst2;
         int minx =  min((int) xcst1, (int) xcst2);
         int maxx =  max((int) xcst1, (int) xcst2);
         for (int y = 0; y < pictureHeight; y++) {
@@ -407,13 +400,11 @@ public class AlgoCourbe {
                 break;
 
             case SW:
-                System.out.println("zsdvkjzbvdujyagdzuj gezv");
                 ordIntersection = (int) perpendiculaireCourante.intersection(new Droite(null, null, (float) pictureWidth))[1];
                 ordonnéeRemplissage = (ordIntersection > 0) ? ordIntersection : 0;
                 while (ordonnéeRemplissage < pictureHeight) {
 
                     x1 = (int) perpendiculaireCourante.f2y(ordonnéeRemplissage + 1);
-                    System.out.println("x1: " + x1);
                     y1 = ordonnéeRemplissage;
                     x2 = pictureWidth;
                     y2 = ordonnéeRemplissage;
@@ -482,7 +473,7 @@ public class AlgoCourbe {
     public void extractAndCopy(Bitmap bitmapCurrent){
 //        System.out.println("extractAndCopy");
 //        System.out.println("bitmap traitee current: " + bitmapTraitees);
-        System.out.println("Position: " + positionPoint);
+//        System.out.println("Position: " + positionPoint);
         remplissage(bitmapCurrent);
         positionPoint ++;
         bitmapTraitees ++;

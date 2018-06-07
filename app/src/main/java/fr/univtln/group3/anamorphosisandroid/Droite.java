@@ -1,8 +1,6 @@
 package fr.univtln.group3.anamorphosisandroid;
 
 
-import android.util.Log;
-
 public class Droite {
     private String TAG = "AlgoCourbe";
     private Float coeffDirecteur = null;
