@@ -217,8 +217,21 @@ public class AlgoCourbe {
     private void rempliLigne(Bitmap bitmapCurrent) {
 //        System.out.println("rempli ligne");
         for (int y = 0; y < pictureHeight; y++) {
-            int x1 = (int) perpendiculaireCourante.f2y(y);
-            int x2 = (int) perpendiculairePrecedente.f2y(y);
+
+            int x1, x2;
+
+            if (perpendiculaireCourante.getXcst() != null){
+                x1 =  perpendiculaireCourante.getXcst().intValue();
+                x2 = (int) perpendiculairePrecedente.f2y(y);
+            }
+            else if (perpendiculairePrecedente.getXcst() != null) {
+                x1 =  (int) perpendiculaireCourante.f2y(y);
+                x2 =  perpendiculairePrecedente.getXcst().intValue();
+            }
+            else {
+                x1 =  (int) perpendiculaireCourante.f2y(y);
+                x2 = (int) perpendiculairePrecedente.f2y(y);
+            }
 
             int minx = min(x1, x2);
             int maxx = max(x1, x2) + 1;
@@ -438,6 +451,9 @@ public class AlgoCourbe {
         String resultParallel = perpendiculaireCourante.isParallel(perpendiculairePrecedente);
         if (!(resultParallel).equals("NO")) {
             return resultParallel;
+        }
+        if(perpendiculaireCourante.getXcst() != null || perpendiculairePrecedente.getXcst() != null){
+            return "HORIZONTAL";
         }
         float[] ptIntersection = perpendiculaireCourante.intersection(perpendiculairePrecedente);
         float xm1 = ptIntersection[0] - 1;
