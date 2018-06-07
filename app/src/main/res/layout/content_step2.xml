@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
+    tools:context=".activities.Step2Activity">
+
+    <TextView
+        android:id="@+id/txtViewStep2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center"
+        android:layout_margin="35dp"
+        android:text="@string/txt_step2"
+        android:textColor="#e39f38"
+        android:textSize="28sp" />
+
+
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="wrap_content"
+        android:layout_height="177dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutStep2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="60dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/btnClassicModeSelected"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/roundedcorner"
+            android:drawableTop="@drawable/ic_classic"
+            android:text="@string/btn_classic_mode" />
+
+        <Button
+            android:id="@+id/btnCustomModeSelected"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/roundedcorner"
+            android:drawableTop="@drawable/ic_custom"
+            android:text="@string/btn_custom_mode" />
+    </LinearLayout>
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="265dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone">
+
+        <TableRow
+            android:id="@+id/tableRowUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/btnUpToDown"
+                android:layout_width="109dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/roundedcorner"
+                android:drawableTop="@drawable/ic_down_arrow"
+                android:text="@string/btn_down" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowMiddle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:gravity="center_horizontal">
+
+
+            <Button
+                android:id="@+id/btnLeftToRight"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/roundedcorner"
+                android:drawableTop="@drawable/ic_right_arrow"
+                android:text="@string/btn_right" />
+
+            <Button
+                android:id="@+id/btnRightToLeft"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/roundedcorner"
+                android:drawableTop="@drawable/ic_left_arrow"
+                android:text="@string/btn_left" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:gravity="center_horizontal">
+
+
+            <Button
+                android:id="@+id/btnDownToUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/roundedcorner"
+                android:drawableTop="@drawable/ic_up_arrow"
+                android:text="@string/btn_up" />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
