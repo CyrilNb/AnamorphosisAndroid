@@ -1,22 +1,22 @@
-package fr.univtln.group3.anamorphosisandroid;
+package fr.univtln.group3.anamorphosisandroid.activities;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.widget.Toast;
 
-import java.io.File;
+import fr.univtln.group3.anamorphosisandroid.R;
 
 
-public class VideoCapture extends Activity {
+public class VideoCaptureActivity extends Activity {
+
+    public static String newVideoPath;
     private final int REQUEST_CODE = 100;
     private final String[] STORAGE_PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -26,7 +26,7 @@ public class VideoCapture extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
-
+        newVideoPath = null;
         int writePermission = ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int readPermission = ActivityCompat.checkSelfPermission(this,
@@ -44,13 +44,8 @@ public class VideoCapture extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE && grantResults.length == 2) {
-
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
-                Toast.makeText(this, "Permission granted !!", Toast.LENGTH_SHORT).show();
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 captureLaunch();
-
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -59,24 +54,30 @@ public class VideoCapture extends Activity {
     }
 
     private void captureLaunch() {
-
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        initSave(intent);
-
-        this.startActivityForResult(intent, REQUEST_CODE);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
-    private void initSave(Intent intent) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            System.out.println(resultCode);
+            if (data.getData() != null) {
+                Uri videoUri = data.getData();
+                Intent step2Intent = new Intent(getApplicationContext(), Step2Activity.class);
+                step2Intent.putExtra("cameraVideoPath", getRealPathFromURI(videoUri));
+                startActivity(step2Intent);
+                finish();
+                overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
+            }
+        }
+    }
 
-        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
-        File videoFile = new File(dir.getAbsolutePath() + File.separator + "ANA_" + System.currentTimeMillis() + ".mp4");
-
-        Uri videoUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, videoFile);
-
-
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 }

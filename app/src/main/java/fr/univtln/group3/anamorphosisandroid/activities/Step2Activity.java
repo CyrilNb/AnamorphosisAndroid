@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +38,7 @@ public class Step2Activity extends AppCompatActivity {
     LinearLayout linearLayoutTouchView;
 
     String videoPath;
+    String cameraVideoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,16 @@ public class Step2Activity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             videoPath = extras.getString("selectedVideoPath");
-            videoView.setVideoPath(videoPath);
+            if (videoPath != null) {
+                videoView.setVideoPath(videoPath);
+            } else {
+                videoPath = null;
+                cameraVideoPath = extras.getString("cameraVideoPath");
+                System.out.println(cameraVideoPath);
+                //uriCamera = Uri.parse(cameraVideoPath);
+                //videoView.setVideoURI(Uri.parse(cameraVideoPath));
+                videoView.setVideoPath(cameraVideoPath);
+            }
             videoView.start();
         }
     }
@@ -90,7 +98,6 @@ public class Step2Activity extends AppCompatActivity {
 
     @OnClick(R.id.btnUpToDown)
     public void onUpToDownButtonClicked() {
-
         launchResultIntent(false, Utils.Direction.DOWN, null);
     }
 
@@ -139,6 +146,7 @@ public class Step2Activity extends AppCompatActivity {
     private void launchResultIntent(Boolean isCustom, Utils.Direction direction, ArrayList<Point> pointsList) {
         Intent intentResult = new Intent(getApplicationContext(), ResultActivity.class);
         intentResult.putExtra("selectedVideoPath", videoPath);
+        intentResult.putExtra("cameraVideoPath", cameraVideoPath);
         intentResult.putExtra("isCustom", isCustom);
         if (direction != null)
             intentResult.putExtra("direction", direction.getValue());

@@ -2,7 +2,6 @@ package fr.univtln.group3.anamorphosisandroid.asyncTasks;
 
 
 import android.graphics.Bitmap;
-import android.graphics.Picture;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.view.View;

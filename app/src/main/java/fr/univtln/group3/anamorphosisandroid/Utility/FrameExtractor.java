@@ -41,17 +41,17 @@ public class FrameExtractor {
         return outputDone;
     }
 
-    public int getWidth(){
+    public int getWidth() {
         return format.getInteger(MediaFormat.KEY_WIDTH);
     }
 
-    public int getHeight(){
+    public int getHeight() {
         return format.getInteger(MediaFormat.KEY_HEIGHT);
     }
 
-    public int getNbFrames(){
-        System.out.println("duration: "+format.getLong(MediaFormat.KEY_DURATION));
-        System.out.println("fps: "+format.getInteger(MediaFormat.KEY_FRAME_RATE));
+    public int getNbFrames() {
+        System.out.println("duration: " + format.getLong(MediaFormat.KEY_DURATION));
+        System.out.println("fps: " + format.getInteger(MediaFormat.KEY_FRAME_RATE));
         return (int) ((format.getLong(MediaFormat.KEY_DURATION) * format.getInteger(MediaFormat.KEY_FRAME_RATE)) / 1000000);
     }
 
@@ -61,7 +61,9 @@ public class FrameExtractor {
             this.videoPath = videoPath;
 
             // Select trackIndex
-            File inputFile = new File(videoPath);
+            File inputFile;
+            inputFile = new File(videoPath);
+
             if (!inputFile.canRead()) {
                 throw new FileNotFoundException("Unable to read " + inputFile);
             }
@@ -76,6 +78,8 @@ public class FrameExtractor {
             // Get format of the trackIndex
             format = extractor.getTrackFormat(trackIndex);
             if (VERBOSE) {
+                Log.d(TAG, "Video size is " + format.getInteger(MediaFormat.KEY_WIDTH) + "x" +
+                        format.getInteger(MediaFormat.KEY_HEIGHT));
                 Log.d(TAG, "Video size is " + format.getInteger(MediaFormat.KEY_WIDTH) + "x" +
                         format.getInteger(MediaFormat.KEY_HEIGHT));
             }
@@ -158,7 +162,7 @@ public class FrameExtractor {
 
 
         // ---- OUTPUT ----
-        if (!outputDone){
+        if (!outputDone) {
             int decoderStatus = decoder.dequeueOutputBuffer(info, TIMEOUT_USEC);
             if (decoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
                 // no output available yet
