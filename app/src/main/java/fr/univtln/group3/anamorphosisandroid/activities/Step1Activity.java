@@ -58,6 +58,10 @@ public class Step1Activity extends AppCompatActivity {
             String selectedVideoPath = Utils.getPath(this, selectedVideoUri);
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
+                System.out.println("*-*-*-*-*-DEBUT-*-*-*-*-*");
+//                new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
+                new CourbeAsync(imageViewResult).execute(selectedVideoPath);
+                System.out.println("*-*-*-*-*- FIN -*-*-*-*-*");
                 //new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
                 Intent intent = new Intent(getApplicationContext(), Step2Activity.class);
                 intent.putExtra("selectedVideoPath", selectedVideoPath);
