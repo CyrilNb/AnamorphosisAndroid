@@ -34,10 +34,6 @@
             android:name=".activities.ResultActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity
-            android:name=".activities.TouchActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
 
         <activity
             android:name=".VideoCapture"

@@ -32,8 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="60dp"
         android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnClassicModeSelected"
@@ -132,5 +131,30 @@
         </TableRow>
 
     </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutTouchView"
+        android:layout_width="397dp"
+        android:layout_height="155dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <fr.univtln.group3.anamorphosisandroid.customViews.TouchView
+            android:id="@+id/touchView"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:background="#ffffff" />
+
+        <Button
+            android:id="@+id/btnSaveCustomDraw"
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:background="@drawable/roundedcorner"
+            android:drawableTop="@drawable/ic_save"
+            android:text="@string/btn_save" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

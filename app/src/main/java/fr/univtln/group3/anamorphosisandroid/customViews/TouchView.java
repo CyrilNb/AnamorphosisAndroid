@@ -26,7 +26,7 @@ public class TouchView extends View {
     Path path;
 
     Point previousPoint = new Point(0,0);
-    List<Point> curvePoints;
+    ArrayList<Point> curvePoints;
 
     /**
      * CONSTRUCTOR OF TOUCHVIEW
@@ -87,7 +87,7 @@ public class TouchView extends View {
      * GETTER of curvePoints
      * @return list of points of the curve
      */
-    public List<Point> getCurvePoints() {
+    public ArrayList<Point> getCurvePoints() {
         return curvePoints;
     }
 }

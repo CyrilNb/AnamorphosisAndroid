@@ -60,8 +60,6 @@ public class FrameExtractor {
             // Save videoPath
             this.videoPath = videoPath;
 
-//            System.out.println(videoPath);
-
             // Select trackIndex
             File inputFile = new File(videoPath);
             if (!inputFile.canRead()) {
