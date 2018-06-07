@@ -1,12 +1,11 @@
-package fr.univtln.group3.anamorphosisandroid.Utility;
+package fr.univtln.group3.anamorphosisandroid;
 
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 
-import fr.univtln.group3.anamorphosisandroid.Utils;
-
-public class PixelsExtractor {
+public class AlgoClassic {
     Utils.Direction direction;
 
 
@@ -26,7 +25,7 @@ public class PixelsExtractor {
     private static final String TAG = "ExtractMpegFrames";
     private static final boolean VERBOSE = false;
 
-    public PixelsExtractor(Bitmap bitmapResult, Utils.Direction direction, int largeur, int hauteur, int nbBitmap){
+    public AlgoClassic(Bitmap bitmapResult, Utils.Direction direction, int largeur, int hauteur, int nbBitmap){
         this.direction = direction;
         this.largeur = largeur;
         this.hauteur = hauteur;

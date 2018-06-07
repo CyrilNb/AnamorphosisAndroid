@@ -1,22 +1,23 @@
-package fr.univtln.group3.anamorphosisandroid;
+package fr.univtln.group3.anamorphosisandroid.asyncTasks;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 
+import fr.univtln.group3.anamorphosisandroid.AlgoClassic;
 import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
-import fr.univtln.group3.anamorphosisandroid.Utility.PixelsExtractor;
+import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
 
-public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Void> {
+public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
     ImageView imageViewResult;
     ResultActivity caller;
     Utils.Direction direction;
 
-    public TestMediaCodecAsync(ResultActivity caller, ImageView imageView, Utils.Direction direction){
+    public AlgoClassicAsyncTask(ResultActivity caller, ImageView imageView, Utils.Direction direction){
         this.imageViewResult = imageView;
         this.caller = caller;
         this.direction = direction;
@@ -34,7 +35,7 @@ public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Void> {
                 conf);
 
 
-        PixelsExtractor pixelsExtractor = new PixelsExtractor(bitmapResult,
+        AlgoClassic algoClassic = new AlgoClassic(bitmapResult,
                 direction,
                 frameExtractor.getWidth(),
                 frameExtractor.getHeight(),
@@ -46,12 +47,12 @@ public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Void> {
             bitmapCurrent = frameExtractor.getNextBitmap();
             if (bitmapCurrent!=null){
                 bitmapCurrentSave = bitmapCurrent;
-                pixelsExtractor.extractAndCopy(bitmapCurrent);
+                algoClassic.extractAndCopy(bitmapCurrent);
                 publishProgress(bitmapResult);
             }
         }
 
-        pixelsExtractor.combler(bitmapCurrentSave);
+        algoClassic.combler(bitmapCurrentSave);
 
         publishProgress(bitmapResult);
 

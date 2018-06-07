@@ -15,8 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.univtln.group3.anamorphosisandroid.R;
-import fr.univtln.group3.anamorphosisandroid.Utils;
-import fr.univtln.group3.anamorphosisandroid.asyncTasks.TraitementAsync;
+import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 
 public class Step2Activity extends AppCompatActivity {
 
@@ -57,7 +56,7 @@ public class Step2Activity extends AppCompatActivity {
 
     /**
      * Runs when the classic button is clicked
-     * Goes to Step 3 Acitivity
+     * Displays directions to choose
      */
     @OnClick(R.id.btnClassicModeSelected)
     public void onClassicModeButtonClicked() {
@@ -66,24 +65,35 @@ public class Step2Activity extends AppCompatActivity {
         tableLayout.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Runs when the custom button is clicked
+     * Displays the touchview to draw custom curve
+     */
+    @OnClick(R.id.btnCustomModeSelected)
+    public void onCustomModeButtonClicked() {
+        textViewStep2.setText(getString(R.string.txt_step3_custom));
+        startCustomAnamorphosis();
+        //ici afficher canvas
+    }
+
     @OnClick(R.id.btnUpToDown)
-    public void onUpToDownButtonClicked(){
-        startClassicAnamophosis(Utils.Direction.DOWN);
+    public void onUpToDownButtonClicked() {
+        startClassicAnamorphosis(Utils.Direction.DOWN);
     }
 
     @OnClick(R.id.btnDownToUp)
-    public void onDownToUpButtonClicked(){
-        startClassicAnamophosis(Utils.Direction.UP);
+    public void onDownToUpButtonClicked() {
+        startClassicAnamorphosis(Utils.Direction.UP);
     }
 
     @OnClick(R.id.btnRightToLeft)
-    public void onRightToLeftButtonClicked(){
-        startClassicAnamophosis(Utils.Direction.LEFT);
+    public void onRightToLeftButtonClicked() {
+        startClassicAnamorphosis(Utils.Direction.LEFT);
     }
 
     @OnClick(R.id.btnLeftToRight)
-    public void onLeftToRightButtonClicked(){
-        startClassicAnamophosis(Utils.Direction.RIGHT);
+    public void onLeftToRightButtonClicked() {
+        startClassicAnamorphosis(Utils.Direction.RIGHT);
     }
 
     /**
@@ -97,16 +107,23 @@ public class Step2Activity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
-    private void startClassicAnamophosis(Utils.Direction direction)
-    {
-        Intent intentStep3 = new Intent(getApplicationContext(), ResultActivity.class);
-        intentStep3.putExtra("selectedVideoPath", videoPath);
-        intentStep3.putExtra("direction", direction.getValue());
-        startActivity(intentStep3);
+    private void startClassicAnamorphosis(Utils.Direction direction) {
+        Intent intentResult = new Intent(getApplicationContext(), ResultActivity.class);
+        intentResult.putExtra("selectedVideoPath", videoPath);
+        intentResult.putExtra("direction", direction.getValue());
+        intentResult.putExtra("isCustom", false);
+        startActivity(intentResult);
         finish();
         overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
     }
 
-
+    private void startCustomAnamorphosis(){
+        Intent intentResult = new Intent(getApplicationContext(), ResultActivity.class);
+        intentResult.putExtra("selectedVideoPath", videoPath);
+        intentResult.putExtra("isCustom", true);
+        startActivity(intentResult);
+        finish();
+        overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
+    }
 
 }

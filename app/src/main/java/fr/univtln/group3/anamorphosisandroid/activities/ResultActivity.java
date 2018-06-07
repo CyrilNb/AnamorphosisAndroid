@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,8 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.univtln.group3.anamorphosisandroid.R;
-import fr.univtln.group3.anamorphosisandroid.TestMediaCodecAsync;
-import fr.univtln.group3.anamorphosisandroid.asyncTasks.TraitementAsync;
+import fr.univtln.group3.anamorphosisandroid.asyncTasks.AlgoClassicAsyncTask;
+import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
+import fr.univtln.group3.anamorphosisandroid.asyncTasks.AlgoCourbeAsyncTask;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -36,7 +36,8 @@ public class ResultActivity extends AppCompatActivity {
      * MEMBERS *
      ***********/
     String videoPath;
-    TestMediaCodecAsync async;
+    AlgoClassicAsyncTask classicAsyncTask;
+    AlgoCourbeAsyncTask courbeAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +58,48 @@ public class ResultActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             videoPath = extras.getString("selectedVideoPath");
-            String direction = extras.getString("direction");
-            async = new TestMediaCodecAsync(this,imgViewResult, direction);
-            async.execute(videoPath);
+            boolean isCustom = extras.getBoolean("isCustom");
+            if (isCustom) {
+                courbeAsyncTask = new AlgoCourbeAsyncTask(this,imgViewResult);
+                courbeAsyncTask.execute(videoPath);
+            } else {
+                String directionString = extras.getString("direction");
+                Utils.Direction direction = null;
+                if (directionString != null) {
+                    if (directionString.equals("up")) {
+                        direction = Utils.Direction.UP;
+                    }
+                    if (directionString.equals("down")) {
+                        direction = Utils.Direction.DOWN;
+                    }
+                    if (directionString.equals("right")) {
+                        direction = Utils.Direction.RIGHT;
+                    }
+                    if (directionString.equals("left")) {
+                        direction = Utils.Direction.LEFT;
+                    }
+                }
+                classicAsyncTask = new AlgoClassicAsyncTask(this, imgViewResult, direction);
+                classicAsyncTask.execute(videoPath);
+            }
+
         }
 
     }
 
     @OnClick(R.id.btnDownload)
-    public void downloadResultImage(){
+    public void downloadResultImage() {
 
     }
 
     @OnClick(R.id.btnHome)
-    public void goHome(){
+    public void goHome() {
+        if (classicAsyncTask != null) {
+            classicAsyncTask.cancel(true);
+        }
+        if (courbeAsyncTask != null) {
+            courbeAsyncTask.cancel(true);
+        }
         Intent intent = new Intent(getApplicationContext(), Step1Activity.class);
         startActivity(intent);
         finish();
@@ -83,7 +112,12 @@ public class ResultActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        async.cancel(true);
+        if (classicAsyncTask != null) {
+            classicAsyncTask.cancel(true);
+        }
+        if (courbeAsyncTask != null) {
+            courbeAsyncTask.cancel(true);
+        }
         Intent intent = new Intent(getApplicationContext(), Step2Activity.class);
         intent.putExtra("selectedVideoPath", videoPath);
         startActivity(intent);

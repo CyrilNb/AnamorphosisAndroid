@@ -1,4 +1,4 @@
-package fr.univtln.group3.anamorphosisandroid;
+package fr.univtln.group3.anamorphosisandroid.Utility;
 
 import android.database.Cursor;
 import android.net.Uri;

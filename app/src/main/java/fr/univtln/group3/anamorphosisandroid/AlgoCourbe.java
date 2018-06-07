@@ -47,16 +47,10 @@ public class AlgoCourbe {
 
         majListePoints();
 
-//        System.out.println("largeur: " + pictureWidth);
-//        System.out.println("hauteru: " + pictureHeight);
-//
-//        System.out.println("nbPoints: " + pointsCourbe.size());
-//        System.out.println("nbBitmap: "+ nbBitmap);
 
     }
 
     private void majListePoints(){
-//        System.out.println("MAJ LISTE POINTS");
 
         int tailleUtilisee = (pointsCourbe.size() - 2);
 
@@ -72,10 +66,7 @@ public class AlgoCourbe {
             else {
                 resteSaut = ((float) tailleUtilisee) / reste;
             }
-//            System.out.println("points a rajouter: " + pointsARajouter);
-//            System.out.println("resteSaut: " + resteSaut);
-//            System.out.println("reste: " + reste);
-//            System.out.println("quotientSaut : " + quotientSaut);
+
 
             float compteurResteSaut = 0;
             int cptCheat = 0;
@@ -471,9 +462,6 @@ public class AlgoCourbe {
     }
 
     public void extractAndCopy(Bitmap bitmapCurrent){
-//        System.out.println("extractAndCopy");
-//        System.out.println("bitmap traitee current: " + bitmapTraitees);
-//        System.out.println("Position: " + positionPoint);
         remplissage(bitmapCurrent);
         positionPoint ++;
         bitmapTraitees ++;
@@ -482,28 +470,10 @@ public class AlgoCourbe {
     public void combler(Bitmap bitmapCurrent){
         if (!isDone) {
             positionPoint --; // ne sert a rien juste pour se rappeler
-//            System.out.println("positoin "+positionPoint );
-//            System.out.println("comblage");
             contrainte = contrainteFin();
             remplirDebutFin(bitmapCurrent);
         }
     }
 
-//    public void a(){
-//        for (int x=0; x<pictureWidth; x++){
-//            float y = perpendiculaireCourante.f2x(x);
-//            if(y<pictureHeight && y>=0){
-//                bitmapResult.setPixel(x, invertY((int)y), Color.RED);
-//                bitmapResult.setPixel(x-1, invertY((int)y), Color.RED);
-//                bitmapResult.setPixel(x+1, invertY((int)y), Color.RED);
-//                bitmapResult.setPixel(x, invertY((int)y-1), Color.RED);
-//                bitmapResult.setPixel(x, invertY((int)y+1), Color.RED);
-//                bitmapResult.setPixel(x-1, invertY((int)y-1), Color.RED);
-//                bitmapResult.setPixel(x+1, invertY((int)y-1), Color.RED);
-//                bitmapResult.setPixel(x-1, invertY((int)y+1), Color.RED);
-//                bitmapResult.setPixel(x+1, invertY((int)y+1), Color.RED);
-//            }
-//        }
-//    }
 
 }

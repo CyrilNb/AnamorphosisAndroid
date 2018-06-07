@@ -1,23 +1,28 @@
-package fr.univtln.group3.anamorphosisandroid;
+package fr.univtln.group3.anamorphosisandroid.asyncTasks;
 
 
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.univtln.group3.anamorphosisandroid.AlgoCourbe;
 import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
+import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
-public class CourbeAsync extends AsyncTask<String, Bitmap, Void> {
+public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
     ImageView imageViewResult;
+    ResultActivity caller;
 
 
-    public CourbeAsync(ImageView imageView){
-        imageViewResult = imageView;
+    public AlgoCourbeAsyncTask(ResultActivity caller, ImageView imageView){
+        this.imageViewResult = imageView;
+        this.caller = caller;
     }
 
     public List<float[]> bezier(float[][] L, int n) {
@@ -92,4 +97,9 @@ public class CourbeAsync extends AsyncTask<String, Bitmap, Void> {
         imageViewResult.setImageBitmap(bitmap[0]);
     }
 
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        this.caller.getBtnDownload().setVisibility(View.VISIBLE);
+    }
 }

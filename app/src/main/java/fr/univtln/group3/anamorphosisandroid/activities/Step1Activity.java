@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.univtln.group3.anamorphosisandroid.R;
-import fr.univtln.group3.anamorphosisandroid.Utils;
+import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 
 public class Step1Activity extends AppCompatActivity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -58,11 +58,8 @@ public class Step1Activity extends AppCompatActivity {
             String selectedVideoPath = Utils.getPath(this, selectedVideoUri);
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
-                System.out.println("*-*-*-*-*-DEBUT-*-*-*-*-*");
-//                new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
-                new CourbeAsync(imageViewResult).execute(selectedVideoPath);
-                System.out.println("*-*-*-*-*- FIN -*-*-*-*-*");
                 //new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
+                //new CourbeAsync(imageViewResult).execute(selectedVideoPath);
                 Intent intent = new Intent(getApplicationContext(), Step2Activity.class);
                 intent.putExtra("selectedVideoPath", selectedVideoPath);
                 startActivity(intent);
