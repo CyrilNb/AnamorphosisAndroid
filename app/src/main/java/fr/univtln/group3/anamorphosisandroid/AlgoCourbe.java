@@ -2,12 +2,9 @@ package fr.univtln.group3.anamorphosisandroid;
 
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Math.*;
@@ -38,10 +35,9 @@ public class AlgoCourbe {
 
     private CONTRAINTE contrainte;
 
-    public AlgoCourbe(Bitmap bitmapResult, List<float[]> pointsCourbe, CONTRAINTE contrainte, int nbBitmap, int pictureHeight, int pictureWidth) {
+    public AlgoCourbe(Bitmap bitmapResult, List<float[]> pointsCourbe, int nbBitmap, int pictureHeight, int pictureWidth) {
         this.bitmapResult = bitmapResult;
         this.pointsCourbe = pointsCourbe;
-        this.contrainte = contrainte;
         this.nbBitmap = nbBitmap;
         this.pictureHeight = pictureHeight;
         this.pictureWidth = pictureWidth;
@@ -52,9 +48,11 @@ public class AlgoCourbe {
         } else {
             majListePoints();
         }
-
-        for (float[] f : pointsCourbe) {
-            System.out.println(f[0] + "-" + f[1]);
+        
+        if (pointsCourbe.size() == 2) majPointsForDiagonal();
+        else {
+            majListePoints();
+            setContrainte(4, 9);
         }
 
     }
@@ -105,6 +103,18 @@ public class AlgoCourbe {
             }
             pointsCourbe.removeAll(Collections.singleton(null));
         }
+
+    }
+
+    private void setContrainte(int index1, int index2){
+
+        float[] premierPoint = pointsCourbe.get(index1);
+        float[] pointCompare = pointsCourbe.get(index2);
+
+        if (premierPoint[0] < pointCompare[0] && premierPoint[1] < pointCompare[1]) contrainte = CONTRAINTE.NE;
+        else if (premierPoint[0] > pointCompare[0] && premierPoint[1] < pointCompare[1]) contrainte = CONTRAINTE.NW;
+        else if (premierPoint[0] > pointCompare[0] && premierPoint[1] > pointCompare[1]) contrainte = CONTRAINTE.SW;
+        else if (premierPoint[0] < pointCompare[0] && premierPoint[1] > pointCompare[1]) contrainte = CONTRAINTE.SE;
 
     }
 
@@ -201,7 +211,7 @@ public class AlgoCourbe {
             } else {
                 if (!isDone) {
 //                    System.out.println("rempli FIN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    contrainte = contrainteFin();
+                    setContrainte(pointsCourbe.size()-5, pointsCourbe.size()-10);
                     remplirDebutFin(bitmapCurrent);
                     isDone = true;
                 }
@@ -465,22 +475,22 @@ public class AlgoCourbe {
     }
 
 
-    private CONTRAINTE contrainteFin() {
-        switch (contrainte) {
-            case SE:
-                return CONTRAINTE.NW;
-
-            case SW:
-                return CONTRAINTE.NE;
-
-            case NE:
-                return CONTRAINTE.SW;
-
-            case NW:
-                return CONTRAINTE.SE;
-        }
-        return null;
-    }
+//    private CONTRAINTE contrainteFin() {
+//        switch (contrainte) {
+//            case SE:
+//                return CONTRAINTE.NW;
+//
+//            case SW:
+//                return CONTRAINTE.NE;
+//
+//            case NE:
+//                return CONTRAINTE.SW;
+//
+//            case NW:
+//                return CONTRAINTE.SE;
+//        }
+//        return null;
+//    }
 
     public void extractAndCopy(Bitmap bitmapCurrent) {
         remplissage(bitmapCurrent);
@@ -491,10 +501,10 @@ public class AlgoCourbe {
     public void combler(Bitmap bitmapCurrent) {
         if (!isDone) {
             positionPoint--; // ne sert a rien juste pour se rappeler
-            contrainte = contrainteFin();
+            setContrainte(pointsCourbe.size()-5, pointsCourbe.size()-10);
+            System.out.println("Contrainte: " + contrainte);
             remplirDebutFin(bitmapCurrent);
         }
     }
-
 
 }
