@@ -1,6 +1,7 @@
 package fr.univtln.group3.anamorphosisandroid.activities;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,8 +64,12 @@ public class ResultActivity extends AppCompatActivity {
             videoPath = extras.getString("selectedVideoPath");
             boolean isCustom = extras.getBoolean("isCustom");
             if (isCustom) {
-                courbeAsyncTask = new AlgoCourbeAsyncTask(this,imgViewResult);
-                courbeAsyncTask.execute(videoPath);
+                ArrayList<Point> pointList = (ArrayList<Point>) extras.getSerializable("pointsList");
+                if (pointList != null) {
+                    System.out.println("size: "+pointList.size());
+                    courbeAsyncTask = new AlgoCourbeAsyncTask(this, imgViewResult, pointList);
+                    courbeAsyncTask.execute(videoPath);
+                }
             } else {
                 String directionString = extras.getString("direction");
                 Utils.Direction direction = null;

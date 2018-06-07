@@ -20,7 +20,7 @@ public class AlgoCourbe {
     private int pictureHeight;
     private Droite perpendiculaireCourante;
     private Droite perpendiculairePrecedente;
-    private List<float[]> pointsCourbe = new ArrayList<>();
+    private List<float[]> pointsCourbe;
     private int nbBitmap;
 
     private int bitmapTraitees = 0;
@@ -47,8 +47,15 @@ public class AlgoCourbe {
         this.pictureWidth = pictureWidth;
 
 
-        if (pointsCourbe.size() == 2) majPointsForDiagonal();
-        else majListePoints();
+        if (pointsCourbe.size() == 2) {
+            majPointsForDiagonal();
+        } else {
+            majListePoints();
+        }
+
+        for (float[] f : pointsCourbe) {
+            System.out.println(f[0] + "-" + f[1]);
+        }
 
     }
 

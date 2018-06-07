@@ -83,4 +83,16 @@ public class Step1Activity extends AppCompatActivity {
         startActivityForResult(galleryIntent, LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE);
     }
 
+    /**
+     * Runs when the camera button is clicked from the bottom menu
+     * Starts the camera activity
+     */
+    @OnClick(R.id.btnLoadCamera)
+    public void hdhdhd() {
+        Intent galleryIntent = new Intent();
+        galleryIntent.setType("video/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(galleryIntent, LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE);
+    }
+
 }

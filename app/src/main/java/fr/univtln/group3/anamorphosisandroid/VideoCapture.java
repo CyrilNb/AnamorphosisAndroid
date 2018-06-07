@@ -24,7 +24,7 @@ public class VideoCapture extends Activity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceBundle){
+    protected void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
 
         int writePermission = ActivityCompat.checkSelfPermission(this,
@@ -33,10 +33,9 @@ public class VideoCapture extends Activity {
                 Manifest.permission.READ_EXTERNAL_STORAGE);
 
         if (writePermission != PackageManager.PERMISSION_GRANTED ||
-                readPermission != PackageManager.PERMISSION_GRANTED){
+                readPermission != PackageManager.PERMISSION_GRANTED) {
             this.requestPermissions(STORAGE_PERMISSIONS, REQUEST_CODE);
-        }
-        else{
+        } else {
             captureLaunch();
         }
 
@@ -44,24 +43,22 @@ public class VideoCapture extends Activity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CODE && grantResults.length == 2){
+        if (requestCode == REQUEST_CODE && grantResults.length == 2) {
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
                 Toast.makeText(this, "Permission granted !!", Toast.LENGTH_SHORT).show();
                 captureLaunch();
 
             }
-        }
-
-        else{
+        } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             this.finish();
         }
     }
 
-    private void captureLaunch(){
+    private void captureLaunch() {
 
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
@@ -73,7 +70,7 @@ public class VideoCapture extends Activity {
     private void initSave(Intent intent) {
 
         File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
-        File videoFile = new File(dir.getAbsolutePath()+ File.separator +"ANA_" + System.currentTimeMillis() + ".mp4");
+        File videoFile = new File(dir.getAbsolutePath() + File.separator + "ANA_" + System.currentTimeMillis() + ".mp4");
 
         Uri videoUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, videoFile);
 

@@ -1,8 +1,9 @@
 package fr.univtln.group3.anamorphosisandroid.asyncTasks;
 
 
-
 import android.graphics.Bitmap;
+import android.graphics.Picture;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,10 +20,13 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
     ImageView imageViewResult;
     ResultActivity caller;
 
+    private List<float[]> floatsPointsList;
+    private List<Point> pointList;
 
-    public AlgoCourbeAsyncTask(ResultActivity caller, ImageView imageView){
+    public AlgoCourbeAsyncTask(ResultActivity caller, ImageView imageView, List<Point> pointList) {
         this.imageViewResult = imageView;
         this.caller = caller;
+        this.pointList = pointList;
     }
 
     public List<float[]> bezier(float[][] L, int n) {
@@ -30,7 +34,7 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
         // n : nombre de points tracés
         float u = 0;
         List<float[]> l_points = new ArrayList<>();
-        for (int i=0; i<n+1; i++){
+        for (int i = 0; i < n + 1; i++) {
             float[] point = bezier_r(L, n, u);
             l_points.add(point);
             u += 1f / n;
@@ -42,14 +46,13 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
     private float[] bezier_r(float[][] L, int n, float u) {
         int N = L.length - 1;
         float[][] newL = new float[N][2];
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             newL[i][0] = (L[i][0] * (1 - u) + L[i + 1][0] * u);
             newL[i][1] = (L[i][1] * (1 - u) + L[i + 1][1] * u);
         }
-        if (newL.length!= 1){
+        if (newL.length != 1) {
             return bezier_r(newL, 1, u);
-        }
-        else{
+        } else {
             return newL[0];
         }
     }
@@ -59,6 +62,11 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
         FrameExtractor frameExtractor = new FrameExtractor(selectedVideoPath[0]);
 
+        floatsPointsList = new ArrayList<>();
+        for (Point p : pointList) {
+            floatsPointsList.add(new float[]{p.x, frameExtractor.getHeight() - 1 - (p.y)});
+        }
+
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bitmapResult = Bitmap.createBitmap(frameExtractor.getWidth(),
                 frameExtractor.getHeight(),
@@ -66,22 +74,21 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
         int largeur = frameExtractor.getWidth();
         int hauteur = frameExtractor.getHeight();
-        float[][] L = { {0,0}, {largeur/4, hauteur/4}, {largeur/2, hauteur/2}, {largeur,hauteur}};
+        float[][] L = {{0, 0}, {largeur / 4, hauteur / 4}, {largeur / 2, hauteur / 2}, {largeur, hauteur}};
         List<float[]> pointsCourbe = bezier(L, 100);
 
         List<float[]> pointsCourbe2 = new ArrayList<>();
-        pointsCourbe2.add(new float[] {200f, 50f});
-        pointsCourbe2.add(new float[] {(float) frameExtractor.getWidth() - 200, (float) frameExtractor.getHeight() - 50});
+        pointsCourbe2.add(new float[]{200f, 50f});
+        pointsCourbe2.add(new float[]{(float) frameExtractor.getWidth() - 200, (float) frameExtractor.getHeight() - 50});
 
-        AlgoCourbe algoCourbe = new AlgoCourbe(bitmapResult, pointsCourbe2, AlgoCourbe.CONTRAINTE.NE,
+        AlgoCourbe algoCourbe = new AlgoCourbe(bitmapResult, floatsPointsList, AlgoCourbe.CONTRAINTE.NE,
                 frameExtractor.getNbFrames(), frameExtractor.getHeight(), frameExtractor.getWidth());
-
 
         Bitmap bitmapCurrent;
         Bitmap bitmapCurrentSave = null;
-        while(!frameExtractor.isOutputDone()){
+        while (!frameExtractor.isOutputDone()) {
             bitmapCurrent = frameExtractor.getNextBitmap();
-            if (bitmapCurrent!=null){
+            if (bitmapCurrent != null) {
                 bitmapCurrentSave = bitmapCurrent;
                 algoCourbe.extractAndCopy(bitmapCurrent);
                 publishProgress(bitmapResult);
@@ -93,7 +100,6 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
         return null;
     }
-
 
 
     @Override
