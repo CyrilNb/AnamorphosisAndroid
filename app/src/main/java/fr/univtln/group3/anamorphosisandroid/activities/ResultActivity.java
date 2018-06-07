@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.univtln.group3.anamorphosisandroid.R;
+import fr.univtln.group3.anamorphosisandroid.TestMediaCodecAsync;
 import fr.univtln.group3.anamorphosisandroid.asyncTasks.TraitementAsync;
 
 public class ResultActivity extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class ResultActivity extends AppCompatActivity {
      * MEMBERS *
      ***********/
     String videoPath;
-    TraitementAsync async;
+    TestMediaCodecAsync async;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class ResultActivity extends AppCompatActivity {
         if (extras != null) {
             videoPath = extras.getString("selectedVideoPath");
             String direction = extras.getString("direction");
-            async = new TraitementAsync(this,imgViewResult, direction);
+            async = new TestMediaCodecAsync(this,imgViewResult, direction);
             async.execute(videoPath);
         }
 

@@ -2,17 +2,25 @@ package fr.univtln.group3.anamorphosisandroid;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ImageView;
 
 import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
 import fr.univtln.group3.anamorphosisandroid.Utility.PixelsExtractor;
+import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
 
 public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Void> {
 
     ImageView imageViewResult;
-    public TestMediaCodecAsync(ImageView imageView){
-        imageViewResult = imageView;
+    ResultActivity caller;
+    Utils.Direction direction;
+
+    public TestMediaCodecAsync(ResultActivity caller, ImageView imageView, Utils.Direction direction){
+        this.imageViewResult = imageView;
+        this.caller = caller;
+        this.direction = direction;
+
     }
 
     @Override
@@ -27,7 +35,7 @@ public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Void> {
 
 
         PixelsExtractor pixelsExtractor = new PixelsExtractor(bitmapResult,
-                PixelsExtractor.Direction.DROITE_GAUCHE,
+                direction,
                 frameExtractor.getWidth(),
                 frameExtractor.getHeight(),
                 frameExtractor.getNbFrames());
@@ -51,10 +59,15 @@ public class TestMediaCodecAsync extends AsyncTask<String, Bitmap, Void> {
     }
 
 
-
     @Override
     protected void onProgressUpdate(Bitmap... bitmap) {
         imageViewResult.setImageBitmap(bitmap[0]);
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        this.caller.getBtnDownload().setVisibility(View.VISIBLE);
     }
 
 }

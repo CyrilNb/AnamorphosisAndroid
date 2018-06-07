@@ -1,11 +1,13 @@
 package fr.univtln.group3.anamorphosisandroid.Utility;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.util.Log;
 
+
+import fr.univtln.group3.anamorphosisandroid.Utils;
+
 public class PixelsExtractor {
-    Direction direction;
+    Utils.Direction direction;
 
 
     int numRangeeDePixels;
@@ -24,34 +26,31 @@ public class PixelsExtractor {
     private static final String TAG = "ExtractMpegFrames";
     private static final boolean VERBOSE = false;
 
-    public PixelsExtractor(Bitmap bitmapResult, Direction direction, int largeur, int hauteur, int nbBitmap){
+    public PixelsExtractor(Bitmap bitmapResult, Utils.Direction direction, int largeur, int hauteur, int nbBitmap){
         this.direction = direction;
         this.largeur = largeur;
         this.hauteur = hauteur;
         this.nbBitmap = nbBitmap;
         this.bitmapResult = bitmapResult;
 
-//        System.out.println("largeur: " + largeur);
-//        System.out.println("hauteur: " + hauteur);
-//        System.out.println("nbBitmap: "+ nbBitmap);
 
         switch (direction){
-            case HAUT_BAS:
+            case DOWN:
                 numRangeeDePixels = 0;
                 tailleObturateur = hauteur / nbBitmap;
                 resteObturateur = (float) nbBitmap / ((float) hauteur % (float) nbBitmap);
                 break;
-            case GAUCHE_DROITE:
+            case RIGHT:
                 numRangeeDePixels = 0;
                 tailleObturateur = largeur / nbBitmap;
                 resteObturateur = (float) nbBitmap / ((float) largeur % (float) nbBitmap);
                 break;
-            case BAS_HAUT:
+            case UP:
                 numRangeeDePixels = hauteur - 1;
                 tailleObturateur = hauteur / nbBitmap;
                 resteObturateur = (float) nbBitmap / ((float) hauteur % (float) nbBitmap);
                 break;
-            case DROITE_GAUCHE:
+            case LEFT:
                 numRangeeDePixels = largeur - 1;
                 tailleObturateur = largeur / nbBitmap;
                 resteObturateur = (float) nbBitmap / ((float) largeur % (float) nbBitmap);
@@ -63,15 +62,10 @@ public class PixelsExtractor {
 
     }
 
-    public enum Direction{
-        HAUT_BAS,
-        GAUCHE_DROITE,
-        BAS_HAUT,
-        DROITE_GAUCHE
-    }
-
-
-
+    /**
+     * Extracts and copy the bitmap
+     * @param bitmapCurrent
+     */
     public void extractAndCopy(Bitmap bitmapCurrent){
         int oneMore = 0;
         if (bitmapTraitees > compteurResteObturateur){
@@ -79,16 +73,16 @@ public class PixelsExtractor {
             compteurResteObturateur += resteObturateur;
         }
         switch (direction){
-            case HAUT_BAS:
+            case DOWN:
                 hautBas(bitmapCurrent, oneMore);
                 break;
-            case GAUCHE_DROITE:
+            case RIGHT:
                 gaucheDroite(bitmapCurrent, oneMore);
                 break;
-            case BAS_HAUT:
+            case UP:
                 basHaut(bitmapCurrent, oneMore);
                 break;
-            case DROITE_GAUCHE:
+            case LEFT:
                 droiteGauche(bitmapCurrent, oneMore);
                 break;
         }
@@ -108,7 +102,6 @@ public class PixelsExtractor {
                 }
             }
             numRangeeDePixels += tailleObturateur + oneMore;
-//            System.out.println("numRangeeDePixels: " + numRangeeDePixels);
             if (VERBOSE) Log.d(TAG, "fin haut bas");
         } else {
             Log.d(TAG, "Erreur, toutes les Bitmaps on été traitées");
@@ -126,7 +119,6 @@ public class PixelsExtractor {
                 }
             }
             numRangeeDePixels += tailleObturateur + oneMore;
-//            System.out.println("numRangeeDePixels: " + numRangeeDePixels);
             if (VERBOSE) Log.d(TAG, "fin gauche droite");
         } else {
             Log.d(TAG, "Erreur, toutes les Bitmaps on été traitées");
@@ -146,7 +138,6 @@ public class PixelsExtractor {
                 }
             }
             numRangeeDePixels = numRangeeDePixels - tailleObturateur - oneMore;
-//            System.out.println("numRangeeDePixels: " + numRangeeDePixels);
             if (VERBOSE) Log.d(TAG, "fin bas haut");
         } else {
             Log.d(TAG, "Erreur, toutes les Bitmaps on été traitées");
@@ -164,7 +155,6 @@ public class PixelsExtractor {
                 }
             }
             numRangeeDePixels = numRangeeDePixels - tailleObturateur - oneMore;
-//            System.out.println("numRangeeDePixels: " + numRangeeDePixels);
             if (VERBOSE) Log.d(TAG, "fin gauche droite");
         } else {
             Log.d(TAG, "Erreur, toutes les Bitmaps on été traitées");
@@ -174,19 +164,19 @@ public class PixelsExtractor {
 
     public void combler(Bitmap bitmapCurrent){
         switch (direction){
-            case HAUT_BAS:
+            case DOWN:
                 if (numRangeeDePixels < hauteur - 1)
                 comblerHautBas(bitmapCurrent);
                 break;
-            case GAUCHE_DROITE:
+            case RIGHT:
                 if (numRangeeDePixels < largeur - 1)
                 comblerGaucheDroite(bitmapCurrent);
                 break;
-            case BAS_HAUT:
+            case UP:
                 if (numRangeeDePixels > 0)
                 comblerBasHaut(bitmapCurrent);
                 break;
-            case DROITE_GAUCHE:
+            case LEFT:
                 if (numRangeeDePixels > 0)
                 comblerDroiteGauche(bitmapCurrent);
                 break;
