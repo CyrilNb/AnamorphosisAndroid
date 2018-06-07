@@ -5,7 +5,6 @@ import android.util.Log;
 
 public class AlgoObturateur {
 
-
     public static void hautVersBas() {
         int N = 3;
         int h = 3;

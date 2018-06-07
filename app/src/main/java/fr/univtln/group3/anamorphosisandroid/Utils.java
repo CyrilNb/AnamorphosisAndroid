@@ -154,5 +154,23 @@ public class Utils {
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
+
+    public enum Direction {
+        UP("up"),
+        DOWN("down"),
+        RIGHT("right"),
+        LEFT("left");
+
+        private String value;
+
+        Direction(String value){
+            this.value = value;
+        }
+
+        public String getValue(){
+            return this.value;
+        }
+    }
+
 }
 
