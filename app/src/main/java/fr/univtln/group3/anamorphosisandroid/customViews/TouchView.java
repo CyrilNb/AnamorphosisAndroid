@@ -26,6 +26,8 @@ public class TouchView extends View {
      ***********/
     float x;
     float y;
+    int canvasWidth = -1;
+    int canvasHeight = -1;
     boolean needReset = false;
     boolean isDiagonalMode = false;
     Paint paint;
@@ -53,6 +55,13 @@ public class TouchView extends View {
         setWillNotDraw(false);
     }
 
+    public int getCanvasWidth() {
+        return canvasWidth;
+    }
+
+    public int getCanvasHeight() {
+        return canvasHeight;
+    }
 
     /**
      * OnDraw method called every time the user is touching the canvas to draw points
@@ -66,6 +75,15 @@ public class TouchView extends View {
             path.reset();
             needReset = false;
         }
+
+        if(canvasHeight == -1){
+            canvasHeight = canvas.getHeight();
+        }
+
+        if(canvasWidth == -1){
+            canvasWidth = canvas.getWidth();
+        }
+
         if (isDiagonalMode) {
             paint.setStrokeWidth(50);
             if (this.getCurvePoints().size() <= 2) {
@@ -77,7 +95,7 @@ public class TouchView extends View {
         } else {
             canvas.drawPath(path, paint);
         }
-    }
+}
 
     /**
      * Clears the canvas and the list of point

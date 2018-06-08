@@ -21,11 +21,15 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
     private List<float[]> floatsPointsList;
     private List<Point> pointList;
+    private int canvasWidth;
+    private int canvasHeight;
 
-    public AlgoCourbeAsyncTask(ResultActivity caller, ImageView imageView, List<Point> pointList) {
+    public AlgoCourbeAsyncTask(ResultActivity caller, ImageView imageView, List<Point> pointList, int canvasHeight, int canvasWidth) {
         this.imageViewResult = imageView;
         this.caller = caller;
         this.pointList = pointList;
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
     }
 
     public List<float[]> bezier(float[][] L, int n) {
@@ -81,7 +85,8 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
         pointsCourbe2.add(new float[]{(float) frameExtractor.getWidth() - 200, (float) frameExtractor.getHeight() - 50});
 
         AlgoCourbe algoCourbe = new AlgoCourbe(bitmapResult, floatsPointsList,
-                frameExtractor.getNbFrames(), frameExtractor.getHeight(), frameExtractor.getWidth());
+                frameExtractor.getNbFrames(), frameExtractor.getHeight(), frameExtractor.getWidth(),
+                canvasHeight, canvasWidth);
 
         Bitmap bitmapCurrent;
         Bitmap bitmapCurrentSave = null;

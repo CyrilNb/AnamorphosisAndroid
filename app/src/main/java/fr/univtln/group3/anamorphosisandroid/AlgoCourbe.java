@@ -21,6 +21,9 @@ public class AlgoCourbe {
     private List<float[]> pointsCourbe;
     private int nbBitmap;
 
+    private int canvasWidth;
+    private int canvasHeight;
+
     private int bitmapTraitees = 0;
     private int positionPoint = 1;
     Bitmap bitmapResult;
@@ -36,12 +39,14 @@ public class AlgoCourbe {
 
     private CONTRAINTE contrainte;
 
-    public AlgoCourbe(Bitmap bitmapResult, List<float[]> pointsCourbe, int nbBitmap, int pictureHeight, int pictureWidth) {
+    public AlgoCourbe(Bitmap bitmapResult, List<float[]> pointsCourbe, int nbBitmap, int pictureHeight, int pictureWidth, int canvasHeight, int canvasWidth) {
         this.bitmapResult = bitmapResult;
         this.pointsCourbe = pointsCourbe;
         this.nbBitmap = nbBitmap;
         this.pictureHeight = pictureHeight;
         this.pictureWidth = pictureWidth;
+        this.canvasHeight = canvasHeight;
+        this.canvasWidth = canvasWidth;
 
         if (pointsCourbe.size() == 2) majPointsForDiagonal();
         else {
@@ -54,10 +59,10 @@ public class AlgoCourbe {
 
     private void majListePoints() {
 
-//        for (float[] point: pointsCourbe) {
-//            point[0] = pictureWidth * (point[0] / 900);
-//            point[1] = pictureHeight * (point[1] / 600);
-//        }
+        for (float[] point: pointsCourbe) {
+            point[0] = pictureWidth * (point[0] / canvasWidth);
+            point[1] = pictureHeight * (point[1] / canvasHeight);
+        }
 
         int tailleUtilisee = (pointsCourbe.size() - 2);
 

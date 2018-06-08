@@ -173,6 +173,8 @@ public class Step2Activity extends AppCompatActivity {
         intentResult.putExtra("selectedVideoPath", videoPath);
         intentResult.putExtra("cameraVideoPath", cameraVideoPath);
         intentResult.putExtra("isCustom", isCustom);
+        intentResult.putExtra("canvasWidth",touchView.getCanvasWidth());
+        intentResult.putExtra("canvasHeight",touchView.getCanvasHeight());
         if (direction != null)
             intentResult.putExtra("direction", direction.getValue());
         if (pointsList != null) {
