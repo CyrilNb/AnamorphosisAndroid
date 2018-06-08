@@ -31,7 +31,7 @@ public class Droite {
     }
 
     public float f2y(float y) {
-        if (coeffDirecteur == 0) System.out.println("PROBBLEME DANS F2Y");
+        if (coeffDirecteur == 0) System.out.println("PROBLEME DANS F2Y");
         return (y - ordOrigine) / coeffDirecteur;
     }
 

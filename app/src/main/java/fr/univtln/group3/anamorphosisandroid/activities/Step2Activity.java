@@ -36,6 +36,8 @@ public class Step2Activity extends AppCompatActivity {
     TouchView touchView;
     @BindView(R.id.linearLayoutTouchView)
     LinearLayout linearLayoutTouchView;
+    @BindView(R.id.linearLayoutButtonsTouchView)
+    LinearLayout linearLayoutButtonsTouchView;
 
     String videoPath;
     String cameraVideoPath;
@@ -94,6 +96,7 @@ public class Step2Activity extends AppCompatActivity {
         linearLayoutStep2.setVisibility(View.GONE);
         touchView.setVisibility(View.VISIBLE);
         linearLayoutTouchView.setVisibility(View.VISIBLE);
+        linearLayoutButtonsTouchView.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.btnUpToDown)
@@ -123,6 +126,11 @@ public class Step2Activity extends AppCompatActivity {
         } else {
             launchResultIntent(true, null, touchView.getCurvePoints());
         }
+    }
+
+    @OnClick(R.id.btnClearCanvas)
+    public void onClearCanvasButtonClicked() {
+        touchView.resetCanvas();
     }
 
     /**
