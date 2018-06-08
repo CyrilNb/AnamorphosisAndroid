@@ -2,6 +2,7 @@ package fr.univtln.group3.anamorphosisandroid;
 
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,22 +43,21 @@ public class AlgoCourbe {
         this.pictureHeight = pictureHeight;
         this.pictureWidth = pictureWidth;
 
-
-        if (pointsCourbe.size() == 2) {
-            majPointsForDiagonal();
-        } else {
-            majListePoints();
-        }
-        
         if (pointsCourbe.size() == 2) majPointsForDiagonal();
         else {
             majListePoints();
             setContrainte(4, 9);
+            System.out.println("nbPoints: " + pointsCourbe.size());
         }
 
     }
 
     private void majListePoints() {
+
+//        for (float[] point: pointsCourbe) {
+//            point[0] = pictureWidth * (point[0] / 900);
+//            point[1] = pictureHeight * (point[1] / 600);
+//        }
 
         int tailleUtilisee = (pointsCourbe.size() - 2);
 
@@ -111,10 +111,11 @@ public class AlgoCourbe {
         float[] premierPoint = pointsCourbe.get(index1);
         float[] pointCompare = pointsCourbe.get(index2);
 
-        if (premierPoint[0] < pointCompare[0] && premierPoint[1] < pointCompare[1]) contrainte = CONTRAINTE.NE;
-        else if (premierPoint[0] > pointCompare[0] && premierPoint[1] < pointCompare[1]) contrainte = CONTRAINTE.NW;
+        if (premierPoint[0] <= pointCompare[0] && premierPoint[1] <= pointCompare[1]) contrainte = CONTRAINTE.NE;
+        else if (premierPoint[0] > pointCompare[0] && premierPoint[1] <= pointCompare[1]) contrainte = CONTRAINTE.NW;
         else if (premierPoint[0] > pointCompare[0] && premierPoint[1] > pointCompare[1]) contrainte = CONTRAINTE.SW;
-        else if (premierPoint[0] < pointCompare[0] && premierPoint[1] > pointCompare[1]) contrainte = CONTRAINTE.SE;
+        else if (premierPoint[0] <= pointCompare[0] && premierPoint[1] > pointCompare[1]) contrainte = CONTRAINTE.SE;
+        System.out.println("Contrainte: " + contrainte);
 
     }
 
@@ -252,7 +253,7 @@ public class AlgoCourbe {
                 maxx = result[1];
 
                 for (int x = minx; x < maxx; x++) {
-                    bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
+                    colorPixel(bitmapCurrent, x, y);
 //                    System.out.println("rempli droite ("+x1+","+y+") ("+x2+","+y+").");
                 }
             }
@@ -274,7 +275,7 @@ public class AlgoCourbe {
                 maxy = result[1];
 
                 for (int y = miny; y < maxy; y++) {
-                    bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
+                    colorPixel(bitmapCurrent, x, y);
                 }
             }
         }
@@ -345,8 +346,9 @@ public class AlgoCourbe {
         int maxx = max((int) xcst1, (int) xcst2);
         for (int y = 0; y < pictureHeight; y++) {
 //            System.out.println("rempli droite ("+ xcst1+","+y+") ("+xcst2+","+y+").");
-            for (int x = minx; x < maxx; x++)
-                bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
+            for (int x = minx; x < maxx; x++) {
+                colorPixel(bitmapCurrent, x, y);
+            }
         }
     }
 
@@ -370,7 +372,7 @@ public class AlgoCourbe {
                     //  appelle foction remplissagePixel(x1, y1, x2, y2)
 
                     for (int x = x1; x < x2; x++) {
-                        bitmapResult.setPixel(x, invertY(y1), bitmapCurrent.getPixel(x, invertY(y1)));
+                        colorPixel(bitmapCurrent, x, y1);
                     }
                     ordonnéeRemplissage++;
                 }
@@ -393,7 +395,7 @@ public class AlgoCourbe {
 
 //                    System.out.println("rempli droite ("+x1+","+y1+") ("+x2+","+y2+").");
                     for (int x = x1; x < x2; x++) {
-                        bitmapResult.setPixel(x, invertY(y1), bitmapCurrent.getPixel(x, invertY(y1)));
+                        colorPixel(bitmapCurrent, x, y1);
                     }
                     ordonnéeRemplissage++;
                 }
@@ -401,7 +403,7 @@ public class AlgoCourbe {
 
             case NW:
                 ordonnéeRemplissage = 0;
-                while (ordonnéeRemplissage < perpendiculaireCourante.f2x(pictureWidth) && ordonnéeRemplissage < pictureWidth) {
+                while (ordonnéeRemplissage < perpendiculaireCourante.f2x(pictureWidth) && ordonnéeRemplissage < pictureHeight) {
 
                     x1 = (int) perpendiculaireCourante.f2y(ordonnéeRemplissage) - 1;
                     y1 = ordonnéeRemplissage;
@@ -414,7 +416,7 @@ public class AlgoCourbe {
 
                     //  appelle fonction remplissagePixels(x1, y1, x2, y2)
                     for (int x = x1; x < x2; x++) {
-                        bitmapResult.setPixel(x, invertY(y1), bitmapCurrent.getPixel(x, invertY(y1)));
+                        colorPixel(bitmapCurrent, x, y1);
                     }
                     ordonnéeRemplissage++;
                 }
@@ -436,7 +438,7 @@ public class AlgoCourbe {
 
                     //  appelle fonction remplissagePixels(x1, y1, x2, y2)
                     for (int x = x1; x < x2; x++) {
-                        bitmapResult.setPixel(x, invertY(y1), bitmapCurrent.getPixel(x, invertY(y1)));
+                        colorPixel(bitmapCurrent, x, y1);
                     }
                     ordonnéeRemplissage++;
                 }
@@ -474,23 +476,11 @@ public class AlgoCourbe {
         return (angle > 90) ? "HORIZONTAL" : "VERTICAL";
     }
 
-
-//    private CONTRAINTE contrainteFin() {
-//        switch (contrainte) {
-//            case SE:
-//                return CONTRAINTE.NW;
-//
-//            case SW:
-//                return CONTRAINTE.NE;
-//
-//            case NE:
-//                return CONTRAINTE.SW;
-//
-//            case NW:
-//                return CONTRAINTE.SE;
-//        }
-//        return null;
-//    }
+    private void colorPixel(Bitmap bitmapCurrent, int x, int y){
+        if (bitmapResult.getPixel(x, invertY(y)) == 0) {
+            bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
+        }
+    }
 
     public void extractAndCopy(Bitmap bitmapCurrent) {
         remplissage(bitmapCurrent);
@@ -502,7 +492,6 @@ public class AlgoCourbe {
         if (!isDone) {
             positionPoint--; // ne sert a rien juste pour se rappeler
             setContrainte(pointsCourbe.size()-5, pointsCourbe.size()-10);
-            System.out.println("Contrainte: " + contrainte);
             remplirDebutFin(bitmapCurrent);
         }
     }
