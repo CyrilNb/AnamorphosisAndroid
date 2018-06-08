@@ -21,6 +21,8 @@ public class TouchView extends View {
 
     float x;
     float y;
+    int canvasWidth = -1;
+    int canvasHeight = -1;
     static boolean needReset = false;
 
     Paint paint;
@@ -48,6 +50,13 @@ public class TouchView extends View {
         setWillNotDraw(false);
     }
 
+    public int getCanvasWidth() {
+        return canvasWidth;
+    }
+
+    public int getCanvasHeight() {
+        return canvasHeight;
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -57,6 +66,13 @@ public class TouchView extends View {
             needReset = false;
         }
         canvas.drawPath(path, paint);
+        if(canvasHeight == -1){
+            canvasHeight = canvas.getHeight();
+        }
+
+        if(canvasWidth == -1){
+            canvasWidth = canvas.getWidth();
+        }
         System.out.println(canvas.getWidth()+" "+canvas.getHeight());
     }
 

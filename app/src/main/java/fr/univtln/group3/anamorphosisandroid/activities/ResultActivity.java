@@ -59,12 +59,16 @@ public class ResultActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
         }
 
+        int canvasWidth;
+        int canvasHeight;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             videoPath = extras.getString("selectedVideoPath");
             if(videoPath == null){
                 videoPath = extras.getString("cameraVideoPath");
             }
+            canvasWidth = extras.getInt("canvasWidth");
+            canvasHeight = extras.getInt("canvasHeight");
 
             boolean isCustom = extras.getBoolean("isCustom");
 
@@ -72,7 +76,7 @@ public class ResultActivity extends AppCompatActivity {
                 ArrayList<Point> pointList = (ArrayList<Point>) extras.getSerializable("pointsList");
                 if (pointList != null) {
                     System.out.println("size: " + pointList.size());
-                    courbeAsyncTask = new AlgoCourbeAsyncTask(this, imgViewResult, pointList);
+                    courbeAsyncTask = new AlgoCourbeAsyncTask(this, imgViewResult, pointList,canvasHeight,canvasWidth);
                     courbeAsyncTask.execute(videoPath);
                 }
             } else {
