@@ -26,7 +26,8 @@ public class TouchView extends View {
      ***********/
     float x;
     float y;
-    static boolean needReset = false;
+    boolean needReset = false;
+    boolean isDiagonalMode = false;
     Paint paint;
     Path path;
     Point previousPoint = new Point(0, 0);
@@ -65,8 +66,17 @@ public class TouchView extends View {
             path.reset();
             needReset = false;
         }
-        canvas.drawPath(path, paint);
-        System.out.println(canvas.getWidth() + " " + canvas.getHeight());
+        if (isDiagonalMode) {
+            paint.setStrokeWidth(50);
+            if (this.getCurvePoints().size() <= 2) {
+                canvas.drawPath(path, paint);
+                if (this.getCurvePoints().size() == 2) {
+                    canvas.drawLine(this.getCurvePoints().get(0).x, this.getCurvePoints().get(0).y, this.getCurvePoints().get(1).x, this.getCurvePoints().get(1).y, this.paint);
+                }
+            }
+        } else {
+            canvas.drawPath(path, paint);
+        }
     }
 
     /**
@@ -119,5 +129,14 @@ public class TouchView extends View {
      */
     public ArrayList<Point> getCurvePoints() {
         return curvePoints;
+    }
+
+    /**
+     * SETTER of diagonalMode
+     *
+     * @param diagonalMode true if user selected Diagonal Mode
+     */
+    public void setDiagonalMode(boolean diagonalMode) {
+        isDiagonalMode = diagonalMode;
     }
 }

@@ -146,6 +146,8 @@ public class Step2Activity extends AppCompatActivity {
         touchView.setVisibility(View.VISIBLE);
         linearLayoutTouchView.setVisibility(View.VISIBLE);
         linearLayoutButtonsTouchView.setVisibility(View.VISIBLE);
+        touchView.setDiagonalMode(true);
+        Toast.makeText(this, "SELECT START POINT AND END POINT ONLY", Toast.LENGTH_LONG).show();
     }
 
     /**
