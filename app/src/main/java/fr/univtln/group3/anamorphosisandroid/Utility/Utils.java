@@ -155,6 +155,9 @@ public class Utils {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
+    /**
+     * ENUM corresponding to classic directions
+     */
     public enum Direction {
         UP("up"),
         DOWN("down"),
@@ -163,11 +166,11 @@ public class Utils {
 
         private String value;
 
-        Direction(String value){
+        Direction(String value) {
             this.value = value;
         }
 
-        public String getValue(){
+        public String getValue() {
             return this.value;
         }
     }

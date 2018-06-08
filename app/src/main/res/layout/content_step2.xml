@@ -27,33 +27,44 @@
 
     <LinearLayout
         android:id="@+id/linearLayoutStep2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="60dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
         <Button
             android:id="@+id/btnClassicModeSelected"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_weight="1"
             android:background="@drawable/roundedcorner"
-            android:drawableTop="@drawable/ic_classic"
+            android:drawableTop="@drawable/ic_classic2"
             android:text="@string/btn_classic_mode" />
 
         <Button
             android:id="@+id/btnCustomModeSelected"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_weight="1"
             android:background="@drawable/roundedcorner"
             android:drawableTop="@drawable/ic_custom"
             android:text="@string/btn_custom_mode" />
+
+        <Button
+            android:id="@+id/btnDiagonalSelected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/roundedcorner"
+            android:drawableTop="@drawable/ic_diagonal"
+            android:text="@string/btn_diagonal_mode" />
     </LinearLayout>
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"

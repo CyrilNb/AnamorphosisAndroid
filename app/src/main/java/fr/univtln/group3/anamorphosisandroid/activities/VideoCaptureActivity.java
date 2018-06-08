@@ -13,16 +13,27 @@ import android.support.v4.app.ActivityCompat;
 
 import fr.univtln.group3.anamorphosisandroid.R;
 
-
+/**
+ * VideoCaptureActivity handles the shooting of a new video inside the application
+ */
 public class VideoCaptureActivity extends Activity {
 
+    /***********
+     * MEMBERS *
+     ***********/
     public static String newVideoPath;
+
     private final int REQUEST_CODE = 100;
     private final String[] STORAGE_PERMISSIONS = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
+    /**
+     * OnCreate called when the activity is being created
+     *
+     * @param savedInstanceBundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
@@ -41,6 +52,13 @@ public class VideoCaptureActivity extends Activity {
 
     }
 
+    /**
+     * Handles the result of requesting needed permissions
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE && grantResults.length == 2) {
@@ -53,11 +71,21 @@ public class VideoCaptureActivity extends Activity {
         }
     }
 
+    /**
+     * Launches Camera intent
+     */
     private void captureLaunch() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         startActivityForResult(intent, REQUEST_CODE);
     }
 
+    /**
+     * Handles the result of the camera intent
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
@@ -73,6 +101,12 @@ public class VideoCaptureActivity extends Activity {
         }
     }
 
+    /**
+     * Method to convert Uri into Path string
+     *
+     * @param contentUri uri to be converted
+     * @return path
+     */
     private String getRealPathFromURI(Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = managedQuery(contentUri, proj, null, null, null);

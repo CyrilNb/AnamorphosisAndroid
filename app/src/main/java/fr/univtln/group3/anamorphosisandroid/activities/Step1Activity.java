@@ -18,7 +18,14 @@ import butterknife.OnClick;
 import fr.univtln.group3.anamorphosisandroid.R;
 import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 
+/**
+ * Step1Activity handles the home screen
+ */
 public class Step1Activity extends AppCompatActivity {
+
+    /*********************************
+     * STATIC MEMBERS INITIALISATION *
+     *********************************/
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final int LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -26,9 +33,17 @@ public class Step1Activity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    /******************************
+     * BINDVIEWS with Butterknife *
+     ******************************/
     @BindView(R.id.txtViewStep1)
     TextView txtViewStep1;
 
+    /**
+     * OnCreate method when the activity is created
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +62,13 @@ public class Step1Activity extends AppCompatActivity {
 
     }
 
+    /**
+     * onActivityResult to handle process when we come from the gallery activity
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

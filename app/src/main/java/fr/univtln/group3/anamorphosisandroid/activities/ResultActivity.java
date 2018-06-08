@@ -21,8 +21,10 @@ import fr.univtln.group3.anamorphosisandroid.asyncTasks.AlgoClassicAsyncTask;
 import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.asyncTasks.AlgoCourbeAsyncTask;
 
+/**
+ * ResultActivity handles the result screen where AsyncTasks are performing
+ */
 public class ResultActivity extends AppCompatActivity {
-
 
     /******************************
      * BINDVIEWS with Butterknife *
@@ -43,6 +45,10 @@ public class ResultActivity extends AppCompatActivity {
     AlgoClassicAsyncTask classicAsyncTask;
     AlgoCourbeAsyncTask courbeAsyncTask;
 
+    /**
+     * OnCreate method called when the activity is being created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,11 +106,18 @@ public class ResultActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Downloads the result image to the intern storage of the phone.
+     */
     @OnClick(R.id.btnDownload)
     public void downloadResultImage() {
 
     }
 
+    /**
+     * Goes back to Home Screen
+     * Cancels running AsyncTask if any
+     */
     @OnClick(R.id.btnHome)
     public void goHome() {
         if (classicAsyncTask != null) {
@@ -122,6 +135,7 @@ public class ResultActivity extends AppCompatActivity {
 
     /**
      * Get Back to previous activity on back button pressed
+     * Cancels running AsyncTask if any
      */
     @Override
     public void onBackPressed() {

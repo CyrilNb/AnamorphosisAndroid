@@ -22,8 +22,14 @@ import fr.univtln.group3.anamorphosisandroid.R;
 import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.customViews.TouchView;
 
+/**
+ * Step2Activity handles the Step 2 screen
+ */
 public class Step2Activity extends AppCompatActivity {
 
+    /******************************
+     * BINDVIEWS with Butterknife *
+     ******************************/
     @BindView(R.id.videoView)
     VideoView videoView;
     @BindView(R.id.txtViewStep2)
@@ -39,6 +45,9 @@ public class Step2Activity extends AppCompatActivity {
     @BindView(R.id.linearLayoutButtonsTouchView)
     LinearLayout linearLayoutButtonsTouchView;
 
+    /***********
+     * MEMBERS *
+     ***********/
     String videoPath;
     String cameraVideoPath;
 
@@ -66,9 +75,6 @@ public class Step2Activity extends AppCompatActivity {
             } else {
                 videoPath = null;
                 cameraVideoPath = extras.getString("cameraVideoPath");
-                System.out.println(cameraVideoPath);
-                //uriCamera = Uri.parse(cameraVideoPath);
-                //videoView.setVideoURI(Uri.parse(cameraVideoPath));
                 videoView.setVideoPath(cameraVideoPath);
             }
             videoView.start();
@@ -131,6 +137,15 @@ public class Step2Activity extends AppCompatActivity {
     @OnClick(R.id.btnClearCanvas)
     public void onClearCanvasButtonClicked() {
         touchView.resetCanvas();
+    }
+
+    @OnClick(R.id.btnDiagonalSelected)
+    public void onDiagonalModeButtonClicked() {
+        textViewStep2.setText(getString(R.string.txt_step3_custom));
+        linearLayoutStep2.setVisibility(View.GONE);
+        touchView.setVisibility(View.VISIBLE);
+        linearLayoutTouchView.setVisibility(View.VISIBLE);
+        linearLayoutButtonsTouchView.setVisibility(View.VISIBLE);
     }
 
     /**

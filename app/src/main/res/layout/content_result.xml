@@ -46,7 +46,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/roundedcorner"
-                android:drawableTop="@drawable/ic_gallery"
+                android:drawableTop="@drawable/ic_save"
                 android:text="@string/btn_gallery"
                 android:visibility="gone"/>
 
