@@ -89,7 +89,12 @@ public class VideoCaptureActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
-            System.out.println(resultCode);
+            if (resultCode == 0) {
+                Intent step1Intent = new Intent(getApplicationContext(), Step1Activity.class);
+                startActivity(step1Intent);
+                finish();
+                overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
+            }
             if (data.getData() != null) {
                 Uri videoUri = data.getData();
                 Intent step2Intent = new Intent(getApplicationContext(), Step2Activity.class);
