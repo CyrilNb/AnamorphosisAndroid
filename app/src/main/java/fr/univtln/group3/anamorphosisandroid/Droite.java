@@ -26,12 +26,19 @@ public class Droite {
         } else {
             System.out.println("x: " + x);
             System.out.println("xcst: "+xcst);
-            return 1;
+            return 1234561;
         }
     }
 
     public float f2y(float y) {
-        if (coeffDirecteur == 0) System.out.println("PROBBLEME DANS F2Y");
+        if (coeffDirecteur == null) {
+            System.out.println("F2Y() = XCST");
+            return xcst;
+        }
+        if (coeffDirecteur == 0) {
+            System.out.println("COEFF F2Y() = 0");
+            return 1234561;
+        }
         return (y - ordOrigine) / coeffDirecteur;
     }
 
