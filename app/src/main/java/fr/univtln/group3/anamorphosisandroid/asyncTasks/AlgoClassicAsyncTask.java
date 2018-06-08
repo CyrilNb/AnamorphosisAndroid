@@ -17,7 +17,7 @@ public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
     ResultActivity caller;
     Utils.Direction direction;
 
-    public AlgoClassicAsyncTask(ResultActivity caller, ImageView imageView, Utils.Direction direction){
+    public AlgoClassicAsyncTask(ResultActivity caller, ImageView imageView, Utils.Direction direction) {
         this.imageViewResult = imageView;
         this.caller = caller;
         this.direction = direction;
@@ -26,7 +26,6 @@ public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
     @Override
     protected Void doInBackground(String... selectedVideoPath) {
-
         FrameExtractor frameExtractor = new FrameExtractor(selectedVideoPath[0]);
 
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
@@ -43,9 +42,9 @@ public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
         Bitmap bitmapCurrent;
         Bitmap bitmapCurrentSave = null;
-        while(!frameExtractor.isOutputDone()){
+        while (!frameExtractor.isOutputDone()) {
             bitmapCurrent = frameExtractor.getNextBitmap();
-            if (bitmapCurrent!=null){
+            if (bitmapCurrent != null) {
                 bitmapCurrentSave = bitmapCurrent;
                 algoClassic.extractAndCopy(bitmapCurrent);
                 publishProgress(bitmapResult);

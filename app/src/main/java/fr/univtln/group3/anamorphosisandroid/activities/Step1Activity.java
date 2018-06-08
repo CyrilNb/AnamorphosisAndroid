@@ -1,13 +1,15 @@
 package fr.univtln.group3.anamorphosisandroid.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.Button;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -24,10 +26,6 @@ public class Step1Activity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    @BindView(R.id.btnLoadGallery)
-    Button btnLoadGallery;
-    @BindView(R.id.btnLoadCamera)
-    Button btnLoadCamera;
     @BindView(R.id.txtViewStep1)
     TextView txtViewStep1;
 
@@ -58,8 +56,6 @@ public class Step1Activity extends AppCompatActivity {
             String selectedVideoPath = Utils.getPath(this, selectedVideoUri);
             System.out.println(selectedVideoPath);
             if (selectedVideoPath != null) {
-                //new TestMediaCodecAsync(imageViewResult).execute(selectedVideoPath);
-                //new CourbeAsync(imageViewResult).execute(selectedVideoPath);
                 Intent intent = new Intent(getApplicationContext(), Step2Activity.class);
                 intent.putExtra("selectedVideoPath", selectedVideoPath);
                 startActivity(intent);
@@ -77,6 +73,7 @@ public class Step1Activity extends AppCompatActivity {
      */
     @OnClick(R.id.btnLoadGallery)
     public void onLoadFromGalleryButtonClicked() {
+        verifyStoragePermissions(Step1Activity.this);
         Intent galleryIntent = new Intent();
         galleryIntent.setType("video/*");
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -88,11 +85,32 @@ public class Step1Activity extends AppCompatActivity {
      * Starts the camera activity
      */
     @OnClick(R.id.btnLoadCamera)
-    public void hdhdhd() {
-        Intent galleryIntent = new Intent();
-        galleryIntent.setType("video/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(galleryIntent, LOAD_VIDEO_GALLERY_ACTIVITY_REQUEST_CODE);
+    public void onCameraButtonClicked() {
+        Intent cameraIntent = new Intent(getApplicationContext(), VideoCaptureActivity.class);
+        startActivity(cameraIntent);
+        finish();
+        overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
+    }
+
+    /**
+     * If APK >= 23, we need to check at runtime for user permissions
+     * Checks if the app has permission to write to device storage
+     * If the app does not has permissions required then the user will be prompted to grant permissions
+     *
+     * @param activity which performs the operation where permissions are requested
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if the application has write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // If not, prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 
 }

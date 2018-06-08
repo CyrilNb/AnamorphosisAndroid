@@ -20,5 +20,6 @@
     <string name="btn_download">DOWNLOAD</string>
     <string name="btn_home">HOME</string>
     <string name="btn_save">SAVE</string>
+    <string name="btn_clear">CLEAR</string>
 
 </resources>

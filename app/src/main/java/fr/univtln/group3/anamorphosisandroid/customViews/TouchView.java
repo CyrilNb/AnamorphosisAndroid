@@ -10,17 +10,18 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TouchView extends View {
 
     float x;
     float y;
+    static boolean needReset = false;
 
     Paint paint;
     Path path;
@@ -38,7 +39,7 @@ public class TouchView extends View {
         path = new Path();
         curvePoints = new ArrayList<>();
         paint = new Paint(Paint.DITHER_FLAG);
-        paint.setAntiAlias(true);
+        paint.setAntiAlias(false);
         paint.setColor(Color.RED);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStyle(Paint.Style.STROKE);
@@ -51,12 +52,22 @@ public class TouchView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if(needReset){
+            path.reset();
+            needReset = false;
+        }
         canvas.drawPath(path, paint);
+        System.out.println(canvas.getWidth()+" "+canvas.getHeight());
+    }
+
+    public void resetCanvas(){
+        needReset = true;
+        this.getCurvePoints().clear();
+        invalidate();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         x = event.getX();
         y = event.getY();
         Point currentPoint = new Point((int)x,(int)y);
@@ -66,7 +77,6 @@ public class TouchView extends View {
             System.out.println(currentPoint);
             previousPoint = currentPoint;
         }
-
 
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
