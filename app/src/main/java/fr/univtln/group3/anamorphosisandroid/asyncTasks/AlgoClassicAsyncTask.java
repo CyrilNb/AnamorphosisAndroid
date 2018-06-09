@@ -68,6 +68,7 @@ public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         this.caller.getBtnDownload().setVisibility(View.VISIBLE);
+        this.caller.getBtnShare().setVisibility(View.VISIBLE);
     }
 
 }

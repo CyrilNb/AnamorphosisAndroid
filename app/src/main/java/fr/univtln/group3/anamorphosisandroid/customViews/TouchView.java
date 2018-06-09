@@ -31,6 +31,7 @@ public class TouchView extends View {
     boolean needReset = false;
     boolean isDiagonalMode = false;
     Paint paint;
+    Point currentPoint;
     Path path;
     Point previousPoint = new Point(0, 0);
     ArrayList<Point> curvePoints;
@@ -51,7 +52,7 @@ public class TouchView extends View {
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
-        paint.setStrokeWidth(20);
+        paint.setStrokeWidth(60);
         setWillNotDraw(false);
     }
 
@@ -71,31 +72,42 @@ public class TouchView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        System.out.println("debut");
         if (needReset) {
             path.reset();
             needReset = false;
+            if(currentPoint != null){
+                paint.setColor(Color.WHITE);
+                canvas.drawPoint(currentPoint.x,currentPoint.y,paint);
+            }
         }
 
-        if(canvasHeight == -1){
+        if (canvasHeight == -1) {
             canvasHeight = canvas.getHeight();
         }
 
-        if(canvasWidth == -1){
+        if (canvasWidth == -1) {
             canvasWidth = canvas.getWidth();
         }
 
+        paint.setColor(Color.RED);
         if (isDiagonalMode) {
             paint.setStrokeWidth(50);
             if (this.getCurvePoints().size() <= 2) {
-                canvas.drawPath(path, paint);
+                //canvas.drawPath(path, paint);
+                if(currentPoint != null){
+                    canvas.drawPoint(currentPoint.x,currentPoint.y,paint);
+                }
                 if (this.getCurvePoints().size() == 2) {
                     canvas.drawLine(this.getCurvePoints().get(0).x, this.getCurvePoints().get(0).y, this.getCurvePoints().get(1).x, this.getCurvePoints().get(1).y, this.paint);
                 }
             }
         } else {
+            System.out.println("avan draw");
             canvas.drawPath(path, paint);
+            System.out.println("apres drax");
         }
-}
+    }
 
     /**
      * Clears the canvas and the list of point
@@ -117,7 +129,7 @@ public class TouchView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         x = event.getX();
         y = event.getY();
-        Point currentPoint = new Point((int) x, (int) y);
+        currentPoint = new Point((int) x, (int) y);
 
         if (!previousPoint.equals(currentPoint)) {
             curvePoints.add(currentPoint);

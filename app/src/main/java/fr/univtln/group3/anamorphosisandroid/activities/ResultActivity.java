@@ -1,16 +1,30 @@
 package fr.univtln.group3.anamorphosisandroid.activities;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.net.Uri;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -20,6 +34,10 @@ import fr.univtln.group3.anamorphosisandroid.R;
 import fr.univtln.group3.anamorphosisandroid.asyncTasks.AlgoClassicAsyncTask;
 import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.asyncTasks.AlgoCourbeAsyncTask;
+import fr.univtln.group3.anamorphosisandroid.asyncTasks.SaveImageAsyncTask;
+
+import static java.lang.System.lineSeparator;
+import static java.lang.System.out;
 
 /**
  * ResultActivity handles the result screen where AsyncTasks are performing
@@ -29,6 +47,8 @@ public class ResultActivity extends AppCompatActivity {
     /******************************
      * BINDVIEWS with Butterknife *
      ******************************/
+    @BindView(R.id.rootLinearLayoutResult)
+    LinearLayout rootLinearLayoutResult;
     @BindView(R.id.txtViewStep3)
     TextView textViewStep3;
     @BindView(R.id.imgViewResult)
@@ -37,6 +57,8 @@ public class ResultActivity extends AppCompatActivity {
     Button btnDownload;
     @BindView(R.id.btnHome)
     Button btnHome;
+    @BindView(R.id.btnShare)
+    Button btnShare;
 
     /***********
      * MEMBERS *
@@ -47,6 +69,7 @@ public class ResultActivity extends AppCompatActivity {
 
     /**
      * OnCreate method called when the activity is being created
+     *
      * @param savedInstanceState
      */
     @Override
@@ -70,7 +93,7 @@ public class ResultActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             videoPath = extras.getString("selectedVideoPath");
-            if(videoPath == null){
+            if (videoPath == null) {
                 videoPath = extras.getString("cameraVideoPath");
             }
             canvasWidth = extras.getInt("canvasWidth");
@@ -81,8 +104,8 @@ public class ResultActivity extends AppCompatActivity {
             if (isCustom) {
                 ArrayList<Point> pointList = (ArrayList<Point>) extras.getSerializable("pointsList");
                 if (pointList != null) {
-                    System.out.println("size: " + pointList.size());
-                    courbeAsyncTask = new AlgoCourbeAsyncTask(this, imgViewResult, pointList,canvasHeight,canvasWidth);
+                    out.println("size: " + pointList.size());
+                    courbeAsyncTask = new AlgoCourbeAsyncTask(this, imgViewResult, pointList, canvasHeight, canvasWidth);
                     courbeAsyncTask.execute(videoPath);
                 }
             } else {
@@ -115,7 +138,7 @@ public class ResultActivity extends AppCompatActivity {
      */
     @OnClick(R.id.btnDownload)
     public void downloadResultImage() {
-
+        saveImage(((BitmapDrawable) imgViewResult.getDrawable()).getBitmap());
     }
 
     /**
@@ -164,4 +187,56 @@ public class ResultActivity extends AppCompatActivity {
     public Button getBtnDownload() {
         return btnDownload;
     }
+
+    /**
+     * Getter btnShare
+     *
+     * @return btnShare
+     */
+    public Button getBtnShare() {
+        return btnShare;
+    }
+
+    /**
+     * Runs when the save button is clicked
+     * Displays a dialog to name the image and perfoms the save of it
+     */
+    public void saveImage(final Bitmap bitmap) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.NameSavedImageDialog);
+        final View dialogView = LayoutInflater.from(this).inflate(R.layout.saveimagedialog, null);
+        builder.setView(dialogView);
+        final EditText editTextName = dialogView.findViewById(R.id.editTxtDialogSaveImage);
+        builder.setTitle("Image name");
+        builder.setPositiveButton("DONE",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String filename = editTextName.getText().toString();
+                        if (!filename.isEmpty()) {
+                            SaveImageAsyncTask saveImageAsyncTask = new SaveImageAsyncTask(rootLinearLayoutResult, filename, bitmap);
+                            saveImageAsyncTask.execute();
+                        } else {
+                            final Snackbar snackbar = Snackbar.make(rootLinearLayoutResult, "NO FILE NAME", Snackbar.LENGTH_LONG);
+                            snackbar.setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    snackbar.dismiss();
+                                }
+                            });
+                            snackbar.show();
+                        }
+                    }
+                });
+        builder.setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }

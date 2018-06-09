@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
-    tools:context=".activities.ResultActivity">
+    tools:context=".activities.ResultActivity"
+    android:id="@+id/rootLinearLayoutResult">
 
     <TextView
         android:id="@+id/txtViewStep3"
@@ -27,39 +28,44 @@
 
         <ImageView
             android:id="@+id/imgViewResult"
-            android:layout_width="264dp"
-            android:layout_height="203dp" />
+            android:layout_width="318dp"
+            android:layout_height="245dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="60dp"
+            android:layout_marginTop="40dp"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/btnDownload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
                 android:background="@drawable/roundedcorner"
-                android:drawableTop="@drawable/ic_save"
-                android:text="@string/btn_gallery"
-                android:visibility="gone"/>
+                android:drawableTop="@drawable/ic_download"
+                android:text="@string/btn_download"
+                android:visibility="invisible" />
 
             <Button
                 android:id="@+id/btnHome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:background="@drawable/roundedcorner"
                 android:drawableTop="@drawable/ic_home"
                 android:text="@string/btn_home" />
+
+            <Button
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/roundedcorner"
+                android:drawableTop="@drawable/ic_share"
+                android:text="@string/btn_share"
+                android:visibility="invisible" />
         </LinearLayout>
 
     </LinearLayout>

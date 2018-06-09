@@ -105,6 +105,18 @@ public class Step2Activity extends AppCompatActivity {
         linearLayoutButtonsTouchView.setVisibility(View.VISIBLE);
     }
 
+
+    @OnClick(R.id.btnDiagonalSelected)
+    public void onDiagonalModeButtonClicked() {
+        textViewStep2.setText(getString(R.string.txt_step3_diagonal));
+        linearLayoutStep2.setVisibility(View.GONE);
+        touchView.setVisibility(View.VISIBLE);
+        linearLayoutTouchView.setVisibility(View.VISIBLE);
+        linearLayoutButtonsTouchView.setVisibility(View.VISIBLE);
+        touchView.setDiagonalMode(true);
+        Toast.makeText(this, "SELECT START POINT AND END POINT ONLY", Toast.LENGTH_LONG).show();
+    }
+
     @OnClick(R.id.btnUpToDown)
     public void onUpToDownButtonClicked() {
         launchResultIntent(false, Utils.Direction.DOWN, null);
@@ -125,6 +137,11 @@ public class Step2Activity extends AppCompatActivity {
         launchResultIntent(false, Utils.Direction.RIGHT, null);
     }
 
+    @OnClick(R.id.btnClearCanvas)
+    public void onClearCanvasButtonClicked() {
+        touchView.resetCanvas();
+    }
+
     @OnClick(R.id.btnSaveCustomDraw)
     public void onSaveCustomDrawButtonClicked() {
         if (touchView.getCurvePoints().isEmpty()) {
@@ -132,22 +149,6 @@ public class Step2Activity extends AppCompatActivity {
         } else {
             launchResultIntent(true, null, touchView.getCurvePoints());
         }
-    }
-
-    @OnClick(R.id.btnClearCanvas)
-    public void onClearCanvasButtonClicked() {
-        touchView.resetCanvas();
-    }
-
-    @OnClick(R.id.btnDiagonalSelected)
-    public void onDiagonalModeButtonClicked() {
-        textViewStep2.setText(getString(R.string.txt_step3_custom));
-        linearLayoutStep2.setVisibility(View.GONE);
-        touchView.setVisibility(View.VISIBLE);
-        linearLayoutTouchView.setVisibility(View.VISIBLE);
-        linearLayoutButtonsTouchView.setVisibility(View.VISIBLE);
-        touchView.setDiagonalMode(true);
-        Toast.makeText(this, "SELECT START POINT AND END POINT ONLY", Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -173,8 +174,8 @@ public class Step2Activity extends AppCompatActivity {
         intentResult.putExtra("selectedVideoPath", videoPath);
         intentResult.putExtra("cameraVideoPath", cameraVideoPath);
         intentResult.putExtra("isCustom", isCustom);
-        intentResult.putExtra("canvasWidth",touchView.getCanvasWidth());
-        intentResult.putExtra("canvasHeight",touchView.getCanvasHeight());
+        intentResult.putExtra("canvasWidth", touchView.getCanvasWidth());
+        intentResult.putExtra("canvasHeight", touchView.getCanvasHeight());
         if (direction != null)
             intentResult.putExtra("direction", direction.getValue());
         if (pointsList != null) {

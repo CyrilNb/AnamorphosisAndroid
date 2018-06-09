@@ -13,6 +13,7 @@
     <string name="txt_step2">STEP 2 - Select mode</string>
     <string name="txt_step3_classic">STEP 3 - Select movement</string>
     <string name="txt_step3_custom">STEP 3 - Draw custom movement</string>
+    <string name="txt_step3_diagonal">STEP 3 - Draw diagonal</string>
     <string name="txt_result">RESULT</string>
     <string name="btn_down">DOWN</string>
     <string name="btn_up">UP</string>
@@ -22,5 +23,6 @@
     <string name="btn_home">HOME</string>
     <string name="btn_save">SAVE</string>
     <string name="btn_clear">CLEAR</string>
+    <string name="btn_share">SHARE</string>
 
 </resources>
