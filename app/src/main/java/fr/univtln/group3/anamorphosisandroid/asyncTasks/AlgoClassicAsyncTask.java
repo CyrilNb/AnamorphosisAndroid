@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import fr.univtln.group3.anamorphosisandroid.AlgoClassic;
-import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
-import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
+import fr.univtln.group3.anamorphosisandroid.utility.FrameExtractor;
+import fr.univtln.group3.anamorphosisandroid.utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
 

@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.univtln.group3.anamorphosisandroid.R;
-import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
+import fr.univtln.group3.anamorphosisandroid.utility.Utils;
 
 /**
  * Step1Activity handles the home screen

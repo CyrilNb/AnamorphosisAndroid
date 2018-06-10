@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.univtln.group3.anamorphosisandroid.AlgoCourbe;
-import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
+import fr.univtln.group3.anamorphosisandroid.utility.FrameExtractor;
 import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
 public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {

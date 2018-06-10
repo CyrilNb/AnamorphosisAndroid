@@ -1,7 +1,5 @@
 package fr.univtln.group3.anamorphosisandroid.activities;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,11 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -32,11 +26,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.univtln.group3.anamorphosisandroid.R;
 import fr.univtln.group3.anamorphosisandroid.asyncTasks.AlgoClassicAsyncTask;
-import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
+import fr.univtln.group3.anamorphosisandroid.utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.asyncTasks.AlgoCourbeAsyncTask;
 import fr.univtln.group3.anamorphosisandroid.asyncTasks.SaveImageAsyncTask;
 
-import static java.lang.System.lineSeparator;
 import static java.lang.System.out;
 
 /**
