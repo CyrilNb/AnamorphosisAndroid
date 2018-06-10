@@ -5,6 +5,13 @@ import android.util.Log;
 
 import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 
+/**
+ * Effectue une anamorphosme simple, ie :
+ *  - gauche vers droite
+ *  - dorite vers gauche
+ *  - haut vers bas
+ *  - bas vers haut
+ */
 public class AlgoClassic {
     Utils.Direction direction;
 
@@ -25,6 +32,14 @@ public class AlgoClassic {
     private static final String TAG = "ExtractMpegFrames";
     private static final boolean VERBOSE = false;
 
+    /**
+     * Initialise les variables
+     * @param bitmapResult
+     * @param direction
+     * @param largeur
+     * @param hauteur
+     * @param nbBitmap
+     */
     public AlgoClassic(Bitmap bitmapResult, Utils.Direction direction, int largeur, int hauteur, int nbBitmap){
         this.direction = direction;
         this.largeur = largeur;
@@ -62,7 +77,7 @@ public class AlgoClassic {
     }
 
     /**
-     * Extracts and copy the bitmap
+     * Extraie une partie de la bitmap courante et la copie sur la bitmap finale
      * @param bitmapCurrent
      */
     public void extractAndCopy(Bitmap bitmapCurrent){
@@ -90,6 +105,11 @@ public class AlgoClassic {
         bitmapTraitees ++;
     }
 
+    /**
+     * Algorithme haut vers bas
+     * @param bitmapCurrent
+     * @param oneMore
+     */
     public void hautBas(Bitmap bitmapCurrent, int oneMore) {
         if (bitmapTraitees < nbBitmap) {
             if (VERBOSE) Log.d(TAG, "debut haut bas");
@@ -107,6 +127,11 @@ public class AlgoClassic {
         }
     }
 
+    /**
+     * Algorithme gauche vers droite
+     * @param bitmapCurrent
+     * @param oneMore
+     */
     public void gaucheDroite(Bitmap bitmapCurrent, int oneMore) {
         if (bitmapTraitees < nbBitmap) {
             if (VERBOSE) Log.d(TAG, "debut gauche droite");
@@ -125,7 +150,11 @@ public class AlgoClassic {
         }
     }
 
-
+    /**
+     * Algorithme bas vers haut
+     * @param bitmapCurrent
+     * @param oneMore
+     */
     public void basHaut(Bitmap bitmapCurrent, int oneMore) {
         if (bitmapTraitees < nbBitmap) {
             if (VERBOSE) Log.d(TAG, "debut bas haut");
@@ -143,6 +172,11 @@ public class AlgoClassic {
         }
     }
 
+    /**
+     * Algorithme droite vers gauche
+     * @param bitmapCurrent
+     * @param oneMore
+     */
     public void droiteGauche(Bitmap bitmapCurrent, int oneMore) {
         if (bitmapTraitees < nbBitmap) {
             if (VERBOSE) Log.d(TAG, "debut gauche droite");
@@ -161,6 +195,11 @@ public class AlgoClassic {
     }
 
 
+    /**
+     * S'il reste une bitmap a traiter, on la traite ici
+     * Cette fonction est lancé après la boucle principale dans l'asyncTask
+     * @param bitmapCurrent
+     */
     public void combler(Bitmap bitmapCurrent){
         switch (direction){
             case DOWN:
@@ -182,6 +221,10 @@ public class AlgoClassic {
         }
     }
 
+    /**
+     * Combler pour haut vers bas
+     * @param bitmapCurrent
+     */
     public void comblerHautBas(Bitmap bitmapCurrent){
         for (int i = numRangeeDePixels; i < hauteur; i++) {
             for (int j = 0; j < largeur; j++) {
@@ -190,6 +233,10 @@ public class AlgoClassic {
         }
     }
 
+    /**
+     * Combler pour gauche vers droite
+     * @param bitmapCurrent
+     */
     public void comblerGaucheDroite(Bitmap bitmapCurrent){
         for (int j = numRangeeDePixels; j < largeur; j++) {
             for (int i = 0; i < hauteur; i++) {
@@ -198,6 +245,10 @@ public class AlgoClassic {
         }
     }
 
+    /**
+     * Combler pour bas vers haut
+     * @param bitmapCurrent
+     */
     public void comblerBasHaut(Bitmap bitmapCurrent){
         for (int i = numRangeeDePixels; i >= 0; i--) {
             for (int j = 0; j < largeur; j++) {
@@ -206,6 +257,10 @@ public class AlgoClassic {
         }
     }
 
+    /**
+     * Combler pour  droite vers gauche
+     * @param bitmapCurrent
+     */
     public void comblerDroiteGauche(Bitmap bitmapCurrent) {
         for (int j = numRangeeDePixels; j >= 0; j--) {
             for (int i = 0; i < hauteur; i++) {

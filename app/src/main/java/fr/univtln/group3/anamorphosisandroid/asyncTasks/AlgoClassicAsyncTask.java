@@ -10,6 +10,9 @@ import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
 import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
+/**
+ * Lance le traitement de l'anamorphose simple en mode detaché
+ */
 
 public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
@@ -24,6 +27,11 @@ public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
     }
 
+    /**
+     * Effectue le traitement ...
+     * @param selectedVideoPath
+     * @return
+     */
     @Override
     protected Void doInBackground(String... selectedVideoPath) {
         FrameExtractor frameExtractor = new FrameExtractor(selectedVideoPath[0]);
@@ -59,6 +67,10 @@ public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
     }
 
 
+    /**
+     * Met a jour la bitmap finale pour voir l'avancée du traitement dans l'application
+     * @param bitmap
+     */
     @Override
     protected void onProgressUpdate(Bitmap... bitmap) {
         imageViewResult.setImageBitmap(bitmap[0]);

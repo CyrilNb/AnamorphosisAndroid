@@ -80,7 +80,7 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
         pointsCourbe2.add(new float[]{200f, 50f});
         pointsCourbe2.add(new float[]{(float) frameExtractor.getWidth() - 200, (float) frameExtractor.getHeight() - 50});
 
-        AlgoCourbe algoCourbe = new AlgoCourbe(bitmapResult, pointsCourbe,
+        AlgoCourbe algoCourbe = new AlgoCourbe(bitmapResult, floatsPointsList,
                 frameExtractor.getNbFrames(), frameExtractor.getHeight(), frameExtractor.getWidth());
 
         Bitmap bitmapCurrent;

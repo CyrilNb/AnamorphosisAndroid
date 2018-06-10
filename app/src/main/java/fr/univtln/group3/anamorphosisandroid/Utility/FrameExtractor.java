@@ -13,6 +13,10 @@ import java.nio.ByteBuffer;
 
 import static junit.framework.Assert.fail;
 
+/**
+ * Recupère les frames d'une video
+ */
+
 public class FrameExtractor {
 
     // Principal
@@ -55,6 +59,10 @@ public class FrameExtractor {
         return (int) ((format.getLong(MediaFormat.KEY_DURATION) * format.getInteger(MediaFormat.KEY_FRAME_RATE)) / 1000000);
     }
 
+    /**
+     * Initialise les variables
+     * @param videoPath
+     */
     public FrameExtractor(String videoPath) {
         try {
             // Save videoPath
@@ -116,6 +124,10 @@ public class FrameExtractor {
         if (VERBOSE) Log.d(TAG, "FrameExtractor configured");
     }
 
+    /**
+     * Extraie une frame et la renvoie sous forme de Bitmap
+     * @return
+     */
     public Bitmap getNextBitmap() {
 
         final int TIMEOUT_USEC = 10000;
