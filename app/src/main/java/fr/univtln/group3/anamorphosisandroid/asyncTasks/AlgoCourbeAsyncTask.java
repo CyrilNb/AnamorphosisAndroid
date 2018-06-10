@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.univtln.group3.anamorphosisandroid.AlgoCourbe;
-import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
+import fr.univtln.group3.anamorphosisandroid.utility.FrameExtractor;
 import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
 public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
@@ -21,11 +21,15 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
     private List<float[]> floatsPointsList;
     private List<Point> pointList;
+    private int canvasWidth;
+    private int canvasHeight;
 
-    public AlgoCourbeAsyncTask(ResultActivity caller, ImageView imageView, List<Point> pointList) {
+    public AlgoCourbeAsyncTask(ResultActivity caller, ImageView imageView, List<Point> pointList, int canvasHeight, int canvasWidth) {
         this.imageViewResult = imageView;
         this.caller = caller;
         this.pointList = pointList;
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
     }
 
     public List<float[]> bezier(float[][] L, int n) {
@@ -73,7 +77,7 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
         int largeur = frameExtractor.getWidth();
         int hauteur = frameExtractor.getHeight();
-        float[][] L = { {0,0}, {0, hauteur}, {largeur, hauteur}, {largeur,0}};
+        float[][] L = {{50, 300}, {350, 300}, {650, 300}, {950, 300}};
         List<float[]> pointsCourbe = bezier(L, 100);
 
         List<float[]> pointsCourbe2 = new ArrayList<>();
@@ -81,7 +85,8 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
         pointsCourbe2.add(new float[]{(float) frameExtractor.getWidth() - 200, (float) frameExtractor.getHeight() - 50});
 
         AlgoCourbe algoCourbe = new AlgoCourbe(bitmapResult, floatsPointsList,
-                frameExtractor.getNbFrames(), frameExtractor.getHeight(), frameExtractor.getWidth());
+                frameExtractor.getNbFrames(), frameExtractor.getHeight(), frameExtractor.getWidth(),
+                canvasHeight, canvasWidth);
 
         Bitmap bitmapCurrent;
         Bitmap bitmapCurrentSave = null;
@@ -110,5 +115,6 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         this.caller.getBtnDownload().setVisibility(View.VISIBLE);
+        this.caller.getBtnShare().setVisibility(View.VISIBLE);
     }
 }

@@ -19,11 +19,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fr.univtln.group3.anamorphosisandroid.R;
-import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
+import fr.univtln.group3.anamorphosisandroid.utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.customViews.TouchView;
 
+/**
+ * Step2Activity handles the Step 2 screen
+ */
 public class Step2Activity extends AppCompatActivity {
 
+    /******************************
+     * BINDVIEWS with Butterknife *
+     ******************************/
     @BindView(R.id.videoView)
     VideoView videoView;
     @BindView(R.id.txtViewStep2)
@@ -36,7 +42,12 @@ public class Step2Activity extends AppCompatActivity {
     TouchView touchView;
     @BindView(R.id.linearLayoutTouchView)
     LinearLayout linearLayoutTouchView;
+    @BindView(R.id.linearLayoutButtonsTouchView)
+    LinearLayout linearLayoutButtonsTouchView;
 
+    /***********
+     * MEMBERS *
+     ***********/
     String videoPath;
     String cameraVideoPath;
 
@@ -64,9 +75,6 @@ public class Step2Activity extends AppCompatActivity {
             } else {
                 videoPath = null;
                 cameraVideoPath = extras.getString("cameraVideoPath");
-                System.out.println(cameraVideoPath);
-                //uriCamera = Uri.parse(cameraVideoPath);
-                //videoView.setVideoURI(Uri.parse(cameraVideoPath));
                 videoView.setVideoPath(cameraVideoPath);
             }
             videoView.start();
@@ -94,6 +102,19 @@ public class Step2Activity extends AppCompatActivity {
         linearLayoutStep2.setVisibility(View.GONE);
         touchView.setVisibility(View.VISIBLE);
         linearLayoutTouchView.setVisibility(View.VISIBLE);
+        linearLayoutButtonsTouchView.setVisibility(View.VISIBLE);
+    }
+
+
+    @OnClick(R.id.btnDiagonalSelected)
+    public void onDiagonalModeButtonClicked() {
+        textViewStep2.setText(getString(R.string.txt_step3_diagonal));
+        linearLayoutStep2.setVisibility(View.GONE);
+        touchView.setVisibility(View.VISIBLE);
+        linearLayoutTouchView.setVisibility(View.VISIBLE);
+        linearLayoutButtonsTouchView.setVisibility(View.VISIBLE);
+        touchView.setDiagonalMode(true);
+        Toast.makeText(this, "SELECT START POINT AND END POINT ONLY", Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.btnUpToDown)
@@ -114,6 +135,11 @@ public class Step2Activity extends AppCompatActivity {
     @OnClick(R.id.btnLeftToRight)
     public void onLeftToRightButtonClicked() {
         launchResultIntent(false, Utils.Direction.RIGHT, null);
+    }
+
+    @OnClick(R.id.btnClearCanvas)
+    public void onClearCanvasButtonClicked() {
+        touchView.resetCanvas();
     }
 
     @OnClick(R.id.btnSaveCustomDraw)
@@ -148,6 +174,8 @@ public class Step2Activity extends AppCompatActivity {
         intentResult.putExtra("selectedVideoPath", videoPath);
         intentResult.putExtra("cameraVideoPath", cameraVideoPath);
         intentResult.putExtra("isCustom", isCustom);
+        intentResult.putExtra("canvasWidth", touchView.getCanvasWidth());
+        intentResult.putExtra("canvasHeight", touchView.getCanvasHeight());
         if (direction != null)
             intentResult.putExtra("direction", direction.getValue());
         if (pointsList != null) {

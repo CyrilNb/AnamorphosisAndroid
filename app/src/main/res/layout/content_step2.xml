@@ -17,44 +17,54 @@
         android:textColor="#e39f38"
         android:textSize="28sp" />
 
-
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="wrap_content"
-        android:layout_height="177dp"
+        android:layout_height="175dp"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp" />
 
     <LinearLayout
         android:id="@+id/linearLayoutStep2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="60dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="80dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
         <Button
             android:id="@+id/btnClassicModeSelected"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_weight="1"
             android:background="@drawable/roundedcorner"
-            android:drawableTop="@drawable/ic_classic"
+            android:drawableTop="@drawable/ic_classic2"
             android:text="@string/btn_classic_mode" />
 
         <Button
             android:id="@+id/btnCustomModeSelected"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_weight="1"
             android:background="@drawable/roundedcorner"
             android:drawableTop="@drawable/ic_custom"
             android:text="@string/btn_custom_mode" />
+
+        <Button
+            android:id="@+id/btnDiagonalSelected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/roundedcorner"
+            android:drawableTop="@drawable/ic_diagonal"
+            android:text="@string/btn_diagonal_mode" />
     </LinearLayout>
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -118,7 +128,6 @@
             android:layout_margin="2dp"
             android:gravity="center_horizontal">
 
-
             <Button
                 android:id="@+id/btnDownToUp"
                 android:layout_width="wrap_content"
@@ -134,25 +143,45 @@
 
     <LinearLayout
         android:id="@+id/linearLayoutTouchView"
-        android:layout_width="397dp"
-        android:layout_height="155dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <fr.univtln.group3.anamorphosisandroid.customViews.TouchView
             android:id="@+id/touchView"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:background="#ffffff" />
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_margin="20dp"
+            android:background="@color/colorWhite" />
 
-        <Button
-            android:id="@+id/btnSaveCustomDraw"
-            android:layout_width="wrap_content"
-            android:layout_height="90dp"
-            android:background="@drawable/roundedcorner"
-            android:drawableTop="@drawable/ic_save"
-            android:text="@string/btn_save" />
+        <LinearLayout
+            android:id="@+id/linearLayoutButtonsTouchView"
+            android:layout_width="397dp"
+            android:layout_height="155dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btnClearCanvas"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/roundedcorner"
+                android:drawableTop="@drawable/ic_clear2"
+                android:text="@string/btn_clear" />
+
+            <Button
+                android:id="@+id/btnSaveCustomDraw"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@drawable/roundedcorner"
+                android:drawableTop="@drawable/ic_save2"
+                android:text="@string/btn_save" />
+        </LinearLayout>
 
     </LinearLayout>
 

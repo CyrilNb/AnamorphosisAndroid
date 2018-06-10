@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import fr.univtln.group3.anamorphosisandroid.AlgoClassic;
-import fr.univtln.group3.anamorphosisandroid.Utility.FrameExtractor;
-import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
+import fr.univtln.group3.anamorphosisandroid.utility.FrameExtractor;
+import fr.univtln.group3.anamorphosisandroid.utility.Utils;
 import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
 /**
@@ -80,6 +80,7 @@ public class AlgoClassicAsyncTask extends AsyncTask<String, Bitmap, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         this.caller.getBtnDownload().setVisibility(View.VISIBLE);
+        this.caller.getBtnShare().setVisibility(View.VISIBLE);
     }
 
 }

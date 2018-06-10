@@ -1,14 +1,12 @@
-package fr.univtln.group3.anamorphosisandroid.Utility;
+package fr.univtln.group3.anamorphosisandroid.utility;
 
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.util.Log;
 import android.view.Surface;
-import android.widget.ImageView;
 
 import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

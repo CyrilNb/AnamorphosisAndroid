@@ -3,7 +3,7 @@ package fr.univtln.group3.anamorphosisandroid;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import fr.univtln.group3.anamorphosisandroid.Utility.Utils;
+import fr.univtln.group3.anamorphosisandroid.utility.Utils;
 
 /**
  * Effectue une anamorphosme simple, ie :
