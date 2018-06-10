@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -135,6 +138,23 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     /**
+     * Shares the result image.
+     */
+    @OnClick(R.id.btnShare)
+    public void shareImage() {
+        String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), ((BitmapDrawable) imgViewResult.getDrawable()).getBitmap(), "myanamorphosis", null);
+        Uri bitmapUri = Uri.parse(bitmapPath);
+        if (bitmapUri != null) {
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, bitmapUri);
+            sharingIntent.setType("image/png");
+            startActivity(Intent.createChooser(sharingIntent, "Share by:"));
+        } else {
+            Toast.makeText(this, "Sorry, something wrong happened", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
      * Goes back to Home Screen
      * Cancels running AsyncTask if any
      */
@@ -231,5 +251,6 @@ public class ResultActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
 }
