@@ -10,6 +10,9 @@ import java.util.List;
 
 import static java.lang.Math.*;
 
+/**
+ * Do the anamorphosis with a custom draw of the user.
+ */
 public class AlgoCourbe {
 
     private String TAG = "AlgoCourbe";
@@ -39,6 +42,17 @@ public class AlgoCourbe {
 
     private CONTRAINTE contrainte;
 
+    /**
+     * CONSTRUCTOR OF ALGOCOURBE.
+     *
+     * @param bitmapResult
+     * @param pointsCourbe
+     * @param nbBitmap
+     * @param pictureHeight
+     * @param pictureWidth
+     * @param canvasHeight
+     * @param canvasWidth
+     */
     public AlgoCourbe(Bitmap bitmapResult, List<float[]> pointsCourbe, int nbBitmap, int pictureHeight, int pictureWidth, int canvasHeight, int canvasWidth) {
         this.bitmapResult = bitmapResult;
         this.pointsCourbe = pointsCourbe;
@@ -57,6 +71,9 @@ public class AlgoCourbe {
 
     }
 
+    /**
+     * Method called to add or remove points if there are not enough or too many.
+     */
     private void majListePoints() {
 
         for (float[] point: pointsCourbe) {
@@ -111,6 +128,12 @@ public class AlgoCourbe {
 
     }
 
+    /**
+     * Set the attribute used to know where to fill at the beginning / at the end.
+     *
+     * @param index1
+     * @param index2
+     */
     private void setContrainte(int index1, int index2){
 
         float[] premierPoint = pointsCourbe.get(index1);
@@ -126,6 +149,12 @@ public class AlgoCourbe {
 
     }
 
+    /**
+     * Add nbPoints points at the index index of the list.
+     *
+     * @param index
+     * @param nbPoints
+     */
     private void addNewPoints(int index, int nbPoints) {
         float[][] pointsARajouter = new float[nbPoints][2];
         for (int i = 0; i < nbPoints; i++) {
@@ -140,6 +169,9 @@ public class AlgoCourbe {
         }
     }
 
+    /**
+     * Create the List of points if the user drew a diagonal.
+     */
     private void majPointsForDiagonal() {
         float[] p1 = pointsCourbe.get(0);
         float[] p2 = pointsCourbe.get(1);
@@ -154,6 +186,10 @@ public class AlgoCourbe {
         addNewPoints(1, nbBitmap);
     }
 
+    /**
+     * Calculates a tangent.
+     * @return
+     */
     private Droite calculTangente() {
 
         float numerateur = pointsCourbe.get(positionPoint - 1)[1] - pointsCourbe.get(positionPoint + 1)[1];
@@ -166,6 +202,9 @@ public class AlgoCourbe {
         return new Droite(coeffDirecteur, ordonneeOrigine, null);
     }
 
+    /**
+     * Calculates a perpendicular.
+     */
     public void calculPerpendiculaire() {
 
         perpendiculairePrecedente = perpendiculaireCourante;
@@ -182,6 +221,11 @@ public class AlgoCourbe {
         }
     }
 
+    /**
+     * Fill the bitmapResult with the pixels between two perpendiculars of the bitmapCurrent.
+     *
+     * @param bitmapCurrent
+     */
     public void remplissage(Bitmap bitmapCurrent) {
         if (bitmapTraitees < nbBitmap) {
             if (positionPoint < pointsCourbe.size() - 1) {
@@ -232,6 +276,11 @@ public class AlgoCourbe {
 //        }
     }
 
+    /**
+     * Fill with lines.
+     *
+     * @param bitmapCurrent
+     */
     private void rempliLigne(Bitmap bitmapCurrent) {
         System.out.println("rempli ligne");
         for (int y = 0; y < pictureHeight; y++) {
@@ -267,6 +316,11 @@ public class AlgoCourbe {
         }
     }
 
+    /**
+     * Fill with columns.
+     *
+     * @param bitmapCurrent
+     */
     private void rempliColonne(Bitmap bitmapCurrent) {
         System.out.println("rempli colonne");
         for (int x = 0; x < pictureWidth; x++) {
@@ -288,11 +342,24 @@ public class AlgoCourbe {
         }
     }
 
+    /**
+     * Reverse the ordinate to put it in an indirect fix.
+     *
+     * @param y
+     * @return
+     */
     private int invertY(int y) {
         return pictureHeight - 1 - y;
     }
 
 
+    /**
+     * Adjust the ordinate to prevent it from going out of the picture.
+     *
+     * @param y1
+     * @param y2
+     * @return
+     */
     private int[] ajustY(int y1, int y2) {
         int[] result = {y1, y2, 1};
         if ((y1 >= 0 && y1 <= pictureHeight) && (y2 >= 0 && y2 <= pictureHeight)) {
@@ -319,6 +386,13 @@ public class AlgoCourbe {
         return result;
     }
 
+    /**
+     * Adjust the abscissa to prevent it from going out of the picture.
+     *
+     * @param x1
+     * @param x2
+     * @return
+     */
     private int[] ajustX(int x1, int x2) {
         int[] result = {x1, x2, 1};
         if ((x1 >= 0 && x1 <= pictureWidth) && (x2 >= 0 && x2 <= pictureWidth)) {
@@ -343,6 +417,11 @@ public class AlgoCourbe {
     }
 
 
+    /**
+     * Fill on the case where both perpendiculars are parallel and vertical.
+     *
+     * @param bitmapCurrent
+     */
     private void rempliPAV(Bitmap bitmapCurrent) {
         System.out.println("rempli PAV");
         float xcst1 = perpendiculaireCourante.getXcst();
@@ -359,6 +438,11 @@ public class AlgoCourbe {
         }
     }
 
+    /**
+     * Fill the beginning and the end of the bitmapResult.
+     *
+     * @param bitmapCurrent
+     */
     public void remplirDebutFin(Bitmap bitmapCurrent) {
         int ordonnéeRemplissage, ordIntersection;
         int x1, y1, x2, y2;
@@ -453,6 +537,14 @@ public class AlgoCourbe {
         }
     }
 
+    /**
+     * Get the angle between two non-parallel perpendiculars.
+     *
+     * @param A
+     * @param B
+     * @param C
+     * @return
+     */
     private double getAngle(float[] A, float[] B, float[] C) {
 
         float[] vectAB = {abs(A[0]) - abs(B[0]), abs(A[1]) - abs(B[1])};
@@ -466,6 +558,11 @@ public class AlgoCourbe {
         return toDegrees(acos(prdScalaire / (AB * AC)));
     }
 
+    /**
+     * Tells how to fill between the two perpendiculars (lines, columns, ...)
+     *
+     * @return
+     */
     private String getSens() {
         String resultParallel = perpendiculaireCourante.isParallel(perpendiculairePrecedente);
         if (!(resultParallel).equals("NO")) {
@@ -483,18 +580,36 @@ public class AlgoCourbe {
         return (angle > 90) ? "HORIZONTAL" : "VERTICAL";
     }
 
+    /**
+     * Set the pixel of the bitmapResult
+     * to the one of bitmapCurrent if it haven't been set before.
+     *
+     * @param bitmapCurrent
+     * @param x
+     * @param y
+     */
     private void colorPixel(Bitmap bitmapCurrent, int x, int y){
         if (bitmapResult.getPixel(x, invertY(y)) == 0) {
             bitmapResult.setPixel(x, invertY(y), bitmapCurrent.getPixel(x, invertY(y)));
         }
     }
 
+    /**
+     * Method used to call the remplissage() method.
+     *
+     * @param bitmapCurrent
+     */
     public void extractAndCopy(Bitmap bitmapCurrent) {
         remplissage(bitmapCurrent);
         positionPoint++;
         bitmapTraitees++;
     }
 
+    /**
+     * Method that fill the end of the picture in case of it wasn't call before.
+     *
+     * @param bitmapCurrent
+     */
     public void combler(Bitmap bitmapCurrent) {
         if (!isDone) {
             System.out.println("combler !!!!!!!!!!!!!!!!!!!!!!!");

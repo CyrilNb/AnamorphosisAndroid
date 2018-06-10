@@ -14,6 +14,9 @@ import fr.univtln.group3.anamorphosisandroid.AlgoCourbe;
 import fr.univtln.group3.anamorphosisandroid.utility.FrameExtractor;
 import fr.univtln.group3.anamorphosisandroid.activities.ResultActivity;
 
+/**
+ * Start the custom anamorphosis in background.
+ */
 public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
 
     ImageView imageViewResult;
@@ -24,6 +27,15 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
     private int canvasWidth;
     private int canvasHeight;
 
+    /**
+     * CONSTRUCTOR OF ALGOCOURBEASYNCTASK
+     *
+     * @param caller
+     * @param imageView
+     * @param pointList
+     * @param canvasHeight
+     * @param canvasWidth
+     */
     public AlgoCourbeAsyncTask(ResultActivity caller, ImageView imageView, List<Point> pointList, int canvasHeight, int canvasWidth) {
         this.imageViewResult = imageView;
         this.caller = caller;
@@ -32,34 +44,12 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
         this.canvasHeight = canvasHeight;
     }
 
-    public List<float[]> bezier(float[][] L, int n) {
-        // L : 4 points de controle
-        // n : nombre de points tracés
-        float u = 0;
-        List<float[]> l_points = new ArrayList<>();
-        for (int i = 0; i < n + 1; i++) {
-            float[] point = bezier_r(L, n, u);
-            l_points.add(point);
-            u += 1f / n;
-        }
-        return l_points;
-    }
-
-
-    private float[] bezier_r(float[][] L, int n, float u) {
-        int N = L.length - 1;
-        float[][] newL = new float[N][2];
-        for (int i = 0; i < N; i++) {
-            newL[i][0] = (L[i][0] * (1 - u) + L[i + 1][0] * u);
-            newL[i][1] = (L[i][1] * (1 - u) + L[i + 1][1] * u);
-        }
-        if (newL.length != 1) {
-            return bezier_r(newL, 1, u);
-        } else {
-            return newL[0];
-        }
-    }
-
+    /**
+     * Method that is done in background.
+     *
+     * @param selectedVideoPath
+     * @return
+     */
     @Override
     protected Void doInBackground(String... selectedVideoPath) {
 
@@ -74,15 +64,6 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
         Bitmap bitmapResult = Bitmap.createBitmap(frameExtractor.getWidth(),
                 frameExtractor.getHeight(),
                 conf);
-
-        int largeur = frameExtractor.getWidth();
-        int hauteur = frameExtractor.getHeight();
-        float[][] L = {{50, 300}, {350, 300}, {650, 300}, {950, 300}};
-        List<float[]> pointsCourbe = bezier(L, 100);
-
-        List<float[]> pointsCourbe2 = new ArrayList<>();
-        pointsCourbe2.add(new float[]{200f, 50f});
-        pointsCourbe2.add(new float[]{(float) frameExtractor.getWidth() - 200, (float) frameExtractor.getHeight() - 50});
 
         AlgoCourbe algoCourbe = new AlgoCourbe(bitmapResult, floatsPointsList,
                 frameExtractor.getNbFrames(), frameExtractor.getHeight(), frameExtractor.getWidth(),
@@ -106,11 +87,20 @@ public class AlgoCourbeAsyncTask extends AsyncTask<String, Bitmap, Void> {
     }
 
 
+    /**
+     * Called while the other method works in background.
+     * @param bitmap
+     */
     @Override
     protected void onProgressUpdate(Bitmap... bitmap) {
         imageViewResult.setImageBitmap(bitmap[0]);
     }
 
+    /**
+     * Called once the one working in background is done.
+     *
+     * @param aVoid
+     */
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
