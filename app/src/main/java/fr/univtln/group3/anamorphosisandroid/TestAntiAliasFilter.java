@@ -8,8 +8,8 @@ import android.widget.ImageView;
 
 
 /**
- * Cette AsyncTask a servi de test
- * et donc les opérations efféctuées ici pourront se faire dans l'AsyncTask principale
+ * This AsyncTask is a test class
+ * and so its conducted operations can directly be done in the Activity main AsyncTask
  */
 public class TestAntiAliasFilter extends AsyncTask<Void,Bitmap,Void> {
 
@@ -27,20 +27,20 @@ public class TestAntiAliasFilter extends AsyncTask<Void,Bitmap,Void> {
     protected Void doInBackground(Void... voids) {
 
         /**
-         * Récupère la BitmapDrawable qui est dans l'ImageView
+         * Get the BitmapDrawable contained by the ImageView
          */
         Bitmap bitmapResult = ((BitmapDrawable) imageViewResult.getDrawable()).getBitmap();
 
 
         /**
-         * Ici on peut choisir quel algo d'anti-aliasing on veut appliquer à l'image (Bitmap)
+         * Here we can choose which of the antialiasing algorithm we want to apply on the image (Bitmap)
          */
 
         bitmapResult = ConvolutionFilter.ConvoFilterMethod.gaussianBlurFilter(bitmapResult);
 
 
         /**
-         * On rafraîchit l'ImageView avec la même image qui a été modifié
+         * We refresh the ImageView with the same image which get edited
          */
         publishProgress(bitmapResult);
 

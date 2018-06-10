@@ -8,19 +8,19 @@ import java.util.Random;
 
 
 /**
- * Cette classe contient différents algos de traitement d'image
- * dont certains servent pour l'anti-aliasing
+ * This class contains different types of image processing algorithms,
+ * some of them will be us for antialiasing
  */
 public class ConvolutionFilter
 {
 
     /**
-     * Les couleurs restent dans l'intervalle de 0 à 255 (8 bits)
+     * Colors will be in 0 to 255 (8 bits) range
      *
      * @param color
-     * @return color, la couleur qui a été estimé
-     * - 0 si la valeur de la couleur de base est inférieur à 0 ou
-     * - 255 si elle est supérieur à 255
+     * @return color, the color which get estimated
+     * - 0 if the color base value is less than 0
+     * - 255 if it is greater than 255
      */
     private static int reduceRangeColor(int color) {
         if (color < 0) {
@@ -34,19 +34,19 @@ public class ConvolutionFilter
 
     public static class ConvoFilterMethod {
         /**
-         * Taille de la Matrice de convolution (Ici on travaille avec des matrices 3x3)
+         * Convolution Matrix Size (Here we will use 3x3 size)
          */
         private static final int MATRIX_SIZE = 3;
 
         /**
-         * Kernel avec matrice de convolution 3x3
+         * Kernel with 3x3 convolution matrix
          *
          * @param bmp
          * @param mat
          * @param factor
          * @param offset
-         * @return bmp, la Bitmap mise en paramètre qui a été modifié
-         * avec l'application d'un filtre (Matrice de convolution 3x3, un facteur et offset)
+         * @return bmp, parameter Bitmap which get edited
+         * with a filter (3x3 convolution matrix, a factor and an offset)
          */
         private static Bitmap convolution3x3(Bitmap bmp, Matrix mat, float factor, int offset) {
 
@@ -93,13 +93,13 @@ public class ConvolutionFilter
             return bmp;
         }
 
-        /** Les méthodes utilisant le kernel avec matrice de convolution 3x3 **/
+        /** Methods using the 3x3 convolution matrix kernel **/
 
         /**
-         * Flou gaussien
+         * Gaussian Blur
          *
          * @param source
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "gaussian blur"
+         * @return source, source Bitmap which get edited with Gaussian Blur filter
          */
         public static Bitmap gaussianBlurFilter(Bitmap source) {
 
@@ -117,10 +117,10 @@ public class ConvolutionFilter
         }
 
         /**
-         * Accentuation
+         * Sharpen
          *
          * @param source
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "sharpen"
+         * @return source, source Bitmap which get edited with Sharpen filter
          */
         public static Bitmap sharpenFilter(Bitmap source) {
 
@@ -138,10 +138,10 @@ public class ConvolutionFilter
 
 
         /**
-         * Recherche de formes (avec accentuation)
+         * Shape Searching and Sharpen
          *
          * @param source
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "shape searching + sharpen"
+         * @return source, source Bitmap which get edited with Shape searching + sharpen filter
          */
         public static Bitmap sharpenSearchingFilter(Bitmap source) {
 
@@ -160,10 +160,10 @@ public class ConvolutionFilter
         }
 
         /**
-         * "Gravure"
+         * Engrave
          *
          * @param source
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "engraved"
+         * @return source, source Bitmap which get edited with Engrave filter
          */
         public static Bitmap engraveFilter(Bitmap source) {
 
@@ -180,10 +180,10 @@ public class ConvolutionFilter
         }
 
         /**
-         * Lissage
+         * Smooth
          *
          * @param source
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "smooth"
+         * @return source, source Bitmap which get edited with Smooth filter
          */
         public static Bitmap smoothFilter(Bitmap source) {
 
@@ -201,10 +201,10 @@ public class ConvolutionFilter
         }
 
         /**
-         * Rééquilibrage par moyenne de couleurs
+         * Mean Removal
          *
          * @param source
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "mean removal"
+         * @return source, source Bitmap which get edited with Mean Removal filter
          */
         public static Bitmap meanRemovalFilter(Bitmap source) {
 
@@ -224,13 +224,13 @@ public class ConvolutionFilter
     }
 
     /**
-     * Les méthodes de la classe suivante n'utilisent pas le système avec matrice de convolution.
-     * On ne peut pas les utiliser avant un ConvoFilterMethod,
-     * mais on peut les utiliser après avoir appliquer un ConvoFilterMethod.
-     * Pour résumer, les NonConvoFilterMethod s'appliquent:
-     *      - soit seuls;
-     *      - soit après un ConvoFilterMethod et donc
-     *          la NonConvoFilterMethod doit être la dernière méthode à être utilisé.
+     * The next class methods don't use the convolution matrix system
+     * We can't use them before using a ConvoFilterMethod
+     * but we can use them after applying a ConvoFilterMethod
+     * To sum this up, the Non ConvoFilterMethod apply:
+     *      - either alone
+     *      - or after applying a ConvoFilterMethod and so
+     *          the Non ConvoFilterMethod must be the last one to be used.
      **/
     public static class NonConvoFilterMethod {
 
@@ -238,13 +238,13 @@ public class ConvolutionFilter
         private static final int COLOR_MAX = 0xFF;
 
         /**
-         * Les valeurs restent dans l'intervalle 0 à max (la valeur max)
+         * The values stay in the 0 to max (the max value) range
          *
          * @param value
          * @param max
-         * @return value, la valeur qui prend
-         * - 0 si la valeur de base est inférieur à 0 ou
-         * - (max - 1) si elle est supérieur à la valeur max de l'intervalle
+         * @return value, value is :
+         * - 0 if the source value is less than 0
+         * - (max - 1) if it is greater or equal than the range max value
          */
         private static int wrapRangeValue(int value, int max) {
             if (value < 0) {
@@ -258,11 +258,11 @@ public class ConvolutionFilter
         }
 
         /**
-         * Attenuation des couleurs
+         * Depth color decreasing
          *
          * @param source
          * @param bitOffset
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "color decreasing"
+         * @return source, source Bitmap which get edited with Color Decreasing filter
          */
         public static Bitmap decreaseColorDepth(Bitmap source, int bitOffset) {
 
@@ -310,10 +310,10 @@ public class ConvolutionFilter
         }
 
         /**
-         * "Bruit"
+         * Flea Effect
          *
          * @param source
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "flea effect" ou "noise"
+         * @return source, source Bitmap which get edited with Flea Effect or Noise filter
          */
 
         public static Bitmap applyFleaEffect(Bitmap source) {
@@ -347,12 +347,12 @@ public class ConvolutionFilter
 
 
         /**
-         * Remplacement de couleur
+         * Color replacing
          *
          * @param source
          * @param fromColor
          * @param targetColor
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "replace color"
+         * @return source, source Bitmap which get edited with Color Replacing filter
          */
         public static Bitmap replaceColor(Bitmap source, int fromColor, int targetColor) {
 
@@ -376,11 +376,11 @@ public class ConvolutionFilter
 
 
         /**
-         * Flou de mouvement gaussien approximatif
+         * Approximative Motion Gaussian Blur
          *
          * @param input
          * @param radius
-         * @return source, la Bitmap source qui a été modifié avec l'application d'un filtre "approximative motion gaussian blur"
+         * @return source, source Bitmap which get edited with Approximative Motion Gaussian Blur filter
          */
         public static Bitmap approxGaussianBlur(Bitmap input, int radius) {
 
@@ -398,12 +398,12 @@ public class ConvolutionFilter
 
 
         /**
-         * Flou de mouvement gaussien vertical puis horizontal
+         * Vertical Motion Gaussian Blur then Horizontal
          *
          * @param source
          * @param radius
-         * @return source, la Bitmap source qui a été modifié
-         * avec l'application d'un filtre "motion gaussian blur Vertical then Horizontal"
+         * @return source, source Bitmap which get edited
+         * with Vertical Motion Gaussian Blur then Horizontal filter
          */
         private static Bitmap boxHandVBlur(Bitmap source, int radius) {
             return horizontalGB(verticalGB(source, radius), radius);
@@ -411,12 +411,12 @@ public class ConvolutionFilter
 
 
         /**
-         * Flou de mouvement gaussien horizontal puis vertical
+         * Horizontal Motion Gaussian Blur then Vertical
          *
          * @param source
          * @param radius
-         * @return source, la Bitmap source qui a été modifié
-         * avec l'application d'un filtre "motion gaussian blur Horizontal then Vertical"
+         * @return source, source Bitmap which get edited
+         * with Horizontal Motion Gaussian Blur then Vertical filter
          */
         private static Bitmap boxVandHBlur(Bitmap source, int radius) {
             return verticalGB(horizontalGB(source, radius), radius);
@@ -424,12 +424,12 @@ public class ConvolutionFilter
 
 
         /**
-         * Flou de mouvement gaussien horizontal
+         * Horizontal Motion Gaussian Blur
          *
          * @param input
          * @param radius
-         * @return source, la Bitmap source qui a été modifié
-         * avec l'application d'un filtre "motion gaussian blur Horizontal"
+         * @return source, which get edited
+         * with Horizontal Motion Gaussian Blur Filter
          */
         private static Bitmap horizontalGB(Bitmap input, int radius) {
 
@@ -488,12 +488,12 @@ public class ConvolutionFilter
 
 
         /**
-         * Flou de mouvement gaussien vertical
+         * Vertical Motion Gaussian Blur
          *
          * @param input
          * @param radius
-         * @return source, la Bitmap source qui a été modifié
-         * avec l'application d'un filtre "motion gaussian blur Vertical
+         * @return source, which get edited
+         * with Vertical Motion Gaussian Blur Filter
          */
         private static Bitmap verticalGB(Bitmap input, int radius) {
             int width = input.getWidth();
@@ -552,11 +552,11 @@ public class ConvolutionFilter
 
 
         /**
-         * Calcule de la couleur moyenne de toute l'image
+         * Compute the average color of the source bitmap
          *
          * @param source
          * @param nbJumpedPixels
-         * @return la couleur moyenne de l'image selon le nombre de pixel a sauté (nbJumpedPixels)
+         * @return the average color of the source bitmap depending on "jumped" pixels(nbJumpedPixels)
          */
         public int calculateAverageColor(Bitmap source, int nbJumpedPixels) {
             int R = 0;
