@@ -490,7 +490,6 @@ public class AlgoCourbe {
     }
 
     public void extractAndCopy(Bitmap bitmapCurrent) {
-        a();
         remplissage(bitmapCurrent);
         positionPoint++;
         bitmapTraitees++;
@@ -505,20 +504,5 @@ public class AlgoCourbe {
         }
     }
 
-    private void a(){
-        for (float[] p: pointsCourbe) {
-            int x = (int) p[0];
-            int y = (int) p[1];
-            bitmapResult.setPixel(x, invertY(y), Color.RED);
-            bitmapResult.setPixel(x + 1, invertY(y + 1), Color.RED);
-            bitmapResult.setPixel(x + 1, invertY(y - 1), Color.RED);
-            bitmapResult.setPixel(x - 1, invertY(y + 1), Color.RED);
-            bitmapResult.setPixel(x - 1, invertY(y + 1), Color.RED);
-            bitmapResult.setPixel(x - 1, invertY(y), Color.RED);
-            bitmapResult.setPixel(x + 1, invertY(y), Color.RED);
-            bitmapResult.setPixel(x, invertY(y - 1), Color.RED);
-            bitmapResult.setPixel(x, invertY(y + 1), Color.RED);
-        }
-    }
 
 }
