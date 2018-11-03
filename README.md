@@ -1,11 +1,15 @@
 # AnamorphosisAndroid
 
-[University project] AnamorphosisAndroidis an android application to simulate the effect of an anamorphosis on any video you want!
+[🎓 University project - 2018] 📸 Android image processing app to apply anamorphosis effect on your photos or any videos you want!
 
 This application was made to combine our knowledge of Android development with image processing.
 
 # Documentation
 You can check the documentation here: https://cyrilnb.github.io/ImageEditor/
+
+# Branch
+
+Warning: switch to the "dev" branch to see the most up-to-date source code!
 
 # Technical Skills
 - Ffmpeg
@@ -28,4 +32,4 @@ You can download the APK [here](../develop/app-debug.apk) to try it out by yours
 # Report
 
 If you are interested you can find our university report [here](https://github.com/CyrilNb/AnamorphosisAndroid/files/2544990/Android.anamorphosis.presentation.pdf)
- for more technical details on how we achieved this project.
+ for more technical details on how we achieve this project.
