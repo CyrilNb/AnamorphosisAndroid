@@ -4,9 +4,6 @@
 
 This application was made to combine our knowledge of Android development with image processing.
 
-# Documentation
-You can check the documentation here: https://cyrilnb.github.io/ImageEditor/
-
 # Branch
 
 Warning: switch to the "dev" branch to see the most up-to-date source code!
